@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>Write in Stars · ZirkoMirko</title>
+	<meta name="description" content="Type anything and watch a galaxy spell it. Drop an image and the stars become it. A ZirkoMirko experiment.">
+	<meta property="og:title" content="Write in Stars">
+	<meta property="og:description" content="Type anything, watch a galaxy spell it. A ZirkoMirko experiment.">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="theme-color" content="#000000">
+	<link rel="icon" href="zm_logo.png">
+	<meta property="og:image" content="https://zirkomirko.com/fun/write-in-stars/poster.jpg">
+	<meta property="og:url" content="https://zirkomirko.com/fun/write-in-stars/">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.webgpu.js",
+				"three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.webgpu.js",
+				"three/tsl": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.tsl.js",
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+			}
+		}
+	</script>
+</head>
+<body>
+	<canvas id="sky" aria-label="A galaxy of stars. Move across it to push stars, tap for a shockwave, scroll to zoom."></canvas>
+
+	<header class="top">
+		<a class="brand" href="https://zirkomirko.com/fun/" aria-label="ZirkoMirko fun projects">
+			<img src="zm_logo.png" alt="ZirkoMirko" width="44" height="37">
+			<span class="lab">Write in Stars</span>
+		</a>
+		<div class="top-tools">
+			<button type="button" id="remixOpen" aria-expanded="false" aria-controls="remix">Remix</button>
+		</div>
+	</header>
+
+	<div class="bottom">
+		<form id="form" class="composer" autocomplete="off">
+			<input id="imageFile" type="file" accept="image/*" class="sr-only" tabindex="-1">
+			<button type="button" id="imageBtn" class="img-btn" aria-label="Use an image" title="Use an image">
+				<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" fill="currentColor"/><path d="M4 17.5l5-4.8 3.6 3.3 2.6-2.3L20 17.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+				<span class="img-label">Image</span>
+			</button>
+			<label for="text" class="sr-only">Type anything</label>
+			<input id="text" name="t" maxlength="28" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="Type anything…" enterkeyhint="go">
+			<button type="submit" class="primary">Write</button>
+		</form>
+		<div class="row">
+			<div class="chips">
+				<button type="button" id="toggle">Galaxy</button>
+				<button type="button" id="random">Surprise me</button>
+			</div>
+			<nav class="actions" aria-label="Share">
+				<button type="button" id="saveClip"><span class="long">Save </span>clip</button>
+				<button type="button" id="saveCard"><span class="long">Save image</span><span class="short">PNG</span></button>
+				<button type="button" id="copyLink"><span class="long">Copy </span>link</button>
+				<a id="post" href="https://x.com/intent/post" target="_blank" rel="noopener">Post</a>
+			</nav>
+		</div>
+		<p id="hint" class="hint" role="status">Type anything, or tap the image button to use a picture</p>
+	</div>
+
+	<section id="remix" hidden aria-labelledby="remixTitle">
+		<header><h2 id="remixTitle" class="serif">Remix</h2><button type="button" id="remixClose" aria-label="Close remix">×</button></header>
+		<label class="control">Palette<select id="palette"></select></label>
+		<div id="sliders"></div>
+		<label class="pause"><input id="pause" type="checkbox"> Pause motion</label>
+		<button type="button" id="reset">Reset look</button>
+	</section>
+
+	<div id="drop" hidden><p class="serif">Drop it to turn it into stars</p><p class="lab">Stays on your device</p></div>
+
+	<p id="status" class="lab" role="status">Gathering stars…</p>
+
+	<dialog id="dlg" aria-labelledby="dlgTitle">
+		<div class="dlg-head">
+			<h2 class="serif" id="dlgTitle">Your image</h2>
+			<button type="button" class="x" id="dlgClose" aria-label="Close">×</button>
+		</div>
+		<div id="dlgMedia" class="media"></div>
+		<p id="dlgHint" class="lab"></p>
+		<div class="dlg-actions">
+			<a id="dlgDownload" class="primary" download>Download</a>
+			<button type="button" id="dlgShare" hidden>Share…</button>
+			<a id="dlgPost" href="https://x.com/intent/post" target="_blank" rel="noopener">Post on X</a>
+		</div>
+	</dialog>
+
+	<script type="module" src="main.js"></script>
+</body>
+</html>

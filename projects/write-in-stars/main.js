@@ -632,7 +632,7 @@ async function startEncoder(W, H) {
 	let config = null;
 	for (const c of configs) { try { if ((await VideoEncoder.isConfigSupported(c)).supported) { config = c; break; } } catch {} }
 	if (!config) return null;
-	const { Muxer, ArrayBufferTarget } = await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.1/build/mp4-muxer.mjs');
+	const { Muxer, ArrayBufferTarget } = await import('./vendor/mp4-muxer-5.2.1/mp4-muxer.min.mjs');
 	const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: 'avc', width: W, height: H, frameRate: FPS }, fastStart: 'in-memory' });
 	const enc = new VideoEncoder({ output: (chunk, meta) => muxer.addVideoChunk(chunk, meta), error: (e) => console.error(e) });
 	enc.configure(config);

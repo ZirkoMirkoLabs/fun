@@ -12,8 +12,11 @@ Small browser experiments by [ZirkoMirko](https://x.com/Zirkomirko). Each one is
 projects/
   <slug>/
     index.html   the project
-    poster.jpg   still for the gallery card (2:1)
+    vendor/      libraries it uses, copied in (no CDNs, works offline)
+    fonts/       self-hosted web fonts
+    poster.webp  still for the gallery card (2:1)
     preview.mp4  short muted loop for the gallery card (2:1)
+    og.jpg       1200x630 social preview
     README.md    what it is and how it works
 ```
 

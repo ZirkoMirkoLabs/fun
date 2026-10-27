@@ -4,6 +4,9 @@ import {
 	length, exp, varying, smoothstep, attribute, TWO_PI,
 } from 'three/tsl';
 import { generate, palettes } from './gen.js';
+import { decodeImage } from './image-input.js';
+
+const yieldToMain = () => globalThis.scheduler?.yield ? scheduler.yield() : new Promise(resolve => setTimeout(resolve, 0));
 
 const MAX_STARS = 70000;
 const CLIP_SEC = 6;
@@ -67,6 +70,8 @@ galaxyCol = mix(galaxyCol, mix(U.inside, U.outside, .4), wSat);
 galaxyCol = mix(galaxyCol, U.accent, step(r(7), U.accFrac).mul(wDisk.add(wRing)));
 
 // ---------- formation + transitions ----------
+
+await yieldToMain();
 
 const PI = float(Math.PI);
 const rt = uRetarget, rtBump = sin(rt.mul(PI));
@@ -249,13 +254,17 @@ function solidBackground(px, w, h) {
 	return close / edge.length > .8 ? m : null;
 }
 
-function sample(c, byAlpha) {
+async function sample(c, byAlpha, current = () => true) {
 	const { width: w, height: h } = c, px = c.getContext('2d').getImageData(0, 0, w, h).data;
 	const bg = byAlpha ? null : solidBackground(px, w, h);
 	const bgLum = bg ? (bg[0] * .2126 + bg[1] * .7152 + bg[2] * .0722) / 255 : 0;
-	const idx = [], cum = [];
-	let total = 0;
+	const idx = new Uint32Array(w * h), cum = new Float64Array(w * h);
+	let total = 0, used = 0, sliceStart = performance.now();
 	for (let i = 0; i < w * h; i++) {
+		if (i % 2048 === 0 && performance.now() - sliceStart > 5) {
+			await yieldToMain(); sliceStart = performance.now();
+			if (!current()) return null;
+		}
 		const j = i * 4, a = px[j + 3] / 255;
 		const lum = (px[j] * .2126 + px[j + 1] * .7152 + px[j + 2] * .0722) / 255;
 		let wgt;
@@ -266,7 +275,7 @@ function sample(c, byAlpha) {
 			wgt = a * Math.min(1, Math.max(0, (d - .12) / .35));
 		} else wgt = a * Math.pow(lum, .65);
 		if (wgt < .03) continue;
-		total += wgt; idx.push(i); cum.push(total);
+		total += wgt; idx[used] = i; cum[used++] = total;
 	}
 	if (!total) throw new Error('empty');
 	const k = Math.min(12 / w, 7 / h);
@@ -274,8 +283,12 @@ function sample(c, byAlpha) {
 	let s = 71937;
 	const rand = () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296;
 	for (let i = 0; i < MAX_STARS; i++) {
+		if (i % 1024 === 0 && performance.now() - sliceStart > 5) {
+			await yieldToMain(); sliceStart = performance.now();
+			if (!current()) return null;
+		}
 		const pick = rand() * total;
-		let lo = 0, hi = cum.length - 1;
+		let lo = 0, hi = used - 1;
 		while (lo < hi) { const mid = (lo + hi) >> 1; if (cum[mid] < pick) lo = mid + 1; else hi = mid; }
 		const p = idx[lo], j = p * 4, n = i * 3;
 		positions[n] = (p % w - w / 2 + rand()) * k;
@@ -307,25 +320,32 @@ function setFormation(f) {
 	syncToggle();
 }
 
+let inputRevision = 0;
 async function writeIntro() {
+	const revision = ++inputRevision;
 	writtenText = '';
 	await document.fonts.load(fontStack(220), 'write anything');
-	if (writtenText) return;
+	if (writtenText || revision !== inputRevision) return;
 	setSeed('write anything');
-	const f = sample(textCanvas('write anything', { arrow: true }), true);
+	const f = await sample(textCanvas('write anything', { arrow: true }), true, () => revision === inputRevision);
+	if (!f || revision !== inputRevision) return;
 	f.kind = 'intro'; f.label = 'write anything';
 	setFormation(f);
 	updateLinks();
 }
 
 async function writeText(raw, { instant = false } = {}) {
+	const revision = ++inputRevision;
 	const text = [...raw.trim()].slice(0, MAX_LEN).join('');
 	writtenText = text;
 	if (!text) { await writeIntro(); hint('Type anything, or tap the image button to use a picture'); return; }
 	await document.fonts.load(fontStack(220), text);
-	if (text !== writtenText) return;
+	if (revision !== inputRevision) return;
 	setSeed(text.toLowerCase());
-	const f = sample(textCanvas(text), true);
+	let f;
+	try { f = await sample(textCanvas(text), true, () => revision === inputRevision); }
+	catch { if (revision === inputRevision) hint('Try text or an emoji with visible characters.'); return; }
+	if (!f || revision !== inputRevision) return;
 	f.kind = 'text'; f.label = text;
 	setFormation(f);
 	if (instant) blendLin = 1;
@@ -333,28 +353,35 @@ async function writeText(raw, { instant = false } = {}) {
 	hint(EMOJI.test(text) ? 'Emoji keep their own colours' : 'Tap for a shockwave · drag through the stars');
 }
 
+let imageBusy = false;
 async function writeImage(source, label, { quiet = false } = {}) {
+	if (imageBusy) return hint('Please wait for the current image to finish.');
+	imageBusy = true;
+	const revision = ++inputRevision;
 	let bmp;
 	try {
-		bmp = await createImageBitmap(source);
+		bmp = await decodeImage(source);
+		if (revision !== inputRevision) return;
 		const c = document.createElement('canvas'), ratio = Math.min(1, 640 / Math.max(bmp.width, bmp.height));
 		c.width = Math.max(1, Math.round(bmp.width * ratio)); c.height = Math.max(1, Math.round(bmp.height * ratio));
 		c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-		const f = sample(c, false);
+		const f = await sample(c, false, () => revision === inputRevision);
+		if (!f || revision !== inputRevision) return;
 		f.kind = 'image'; f.label = label;
 		if (!quiet) { writtenText = ''; $('text').value = ''; setSeed('image:' + label); }
 		setFormation(f);
 		updateLinks();
 		if (!quiet) hint('Your image stays on this device. Clips and images include it; links don’t.');
-	} catch {
-		hint('Couldn’t find bright pixels in that image. Try a logo, a PNG, or something with contrast.');
-	} finally { bmp?.close?.(); }
+	} catch (error) {
+		if (revision === inputRevision) hint(error.message === 'empty'
+			? 'Couldn’t find bright pixels in that image. Try a logo, a PNG, or something with contrast.'
+			: error.message.startsWith('Pick ') || error.message.startsWith('Use a valid ')
+				? error.message : 'Couldn’t read that image. Try a PNG, JPEG, WebP or GIF.');
+	} finally { bmp?.close?.(); imageBusy = false; }
 }
 
 async function loadFile(file) {
 	if (!file) return;
-	if (!file.type.startsWith('image/')) return hint('That isn’t an image file.');
-	if (file.size > 40 * 1024 * 1024) return hint('Pick an image under 40 MB.');
 	hint('Reading your image locally…');
 	await writeImage(file, file.name.replace(/\.[^.]+$/, '').slice(0, 40) || 'image');
 }
@@ -423,10 +450,10 @@ addEventListener('paste', (e) => {
 });
 
 $('copyLink').addEventListener('click', async (e) => {
-	const btn = e.currentTarget, label = btn.innerHTML;
+	const btn = e.currentTarget, label = [...btn.childNodes].map(node => node.cloneNode(true));
 	try { await navigator.clipboard.writeText(shareURL()); btn.textContent = 'Copied'; }
 	catch { prompt('Copy this link:', shareURL()); }
-	setTimeout(() => (btn.innerHTML = label), 1400);
+	setTimeout(() => btn.replaceChildren(...label), 1400);
 	if (formation?.kind === 'image') hint('Links can’t carry your image, only the look.');
 });
 
@@ -434,7 +461,9 @@ $('copyLink').addEventListener('click', async (e) => {
 for (const [key, [label, min, max, st]] of Object.entries(specs)) {
 	const row = document.createElement('label');
 	row.className = 'control';
-	row.innerHTML = `${label}<output id="v-${key}"></output><input id="p-${key}" type="range" min="${min}" max="${max}" step="${st}">`;
+	const output = Object.assign(document.createElement('output'), { id: `v-${key}` });
+	const input = Object.assign(document.createElement('input'), { id: `p-${key}`, type: 'range', min, max, step: st });
+	row.append(label, output, input);
 	$('sliders').append(row);
 	$(`p-${key}`).addEventListener('input', (e) => { remix.params[key] = Number(e.target.value); applyLook(); updateLinks(); });
 }
@@ -549,7 +578,7 @@ function stepWorld(dt, now, recT = null) {
 
 // ---------- share image + clip ----------
 
-const logo = new Image(); logo.src = 'zm_logo.png';
+const logo = new Image(); logo.src = 'zm_logo.webp';
 function drawCard(ctx, W, H, src) {
 	ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
 	ctx.drawImage(src, 0, 0, W, H);
@@ -579,6 +608,7 @@ function withOutputSize(W, H, fn) {
 
 const dlg = $('dlg');
 let objectURL = null;
+let exportGeneration = 0, preparingClip = false, savingCard = false;
 function releasePreview() { const el = $('dlgMedia').firstElementChild; if (el?.src?.startsWith('blob:')) URL.revokeObjectURL(el.src); }
 function openDialog(title, mediaEl, hintText) {
 	$('dlgTitle').textContent = title;
@@ -606,18 +636,26 @@ function setDownload(blob, filename) {
 }
 const fileBase = () => 'stars-' + ((formation?.label || seed).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'zm');
 $('dlgClose').addEventListener('click', () => dlg.close());
-dlg.addEventListener('close', () => { stopRecording(true); releasePreview(); $('dlgMedia').replaceChildren(); fitScreen(); });
+dlg.addEventListener('close', () => { exportGeneration++; stopRecording(true); releasePreview(); setDownload(null); $('dlgMedia').replaceChildren(); fitScreen(); });
 
 $('saveCard').addEventListener('click', async () => {
+	if (savingCard) return;
+	savingCard = true;
+	$('saveCard').disabled = true;
+	try {
 	await document.fonts.ready;
+	await logo.decode().catch(() => {});
 	const W = 1600, H = 900, out = document.createElement('canvas');
 	out.width = W; out.height = H;
 	withOutputSize(W, H, () => drawCard(out.getContext('2d'), W, H, canvas));
 	fitScreen();
 	const blob = await new Promise(res => out.toBlob(res, 'image/png'));
+	if (!blob) throw new Error('PNG encoding failed');
 	const img = new Image(); img.alt = 'Your stars'; img.src = URL.createObjectURL(blob);
 	openDialog('Your image', img, 'Download it and attach it to your post.');
 	setDownload(blob, fileBase() + '.png');
+	} catch { hint('Couldn’t save an image in this browser. Please try again.'); }
+	finally { savingCard = false; $('saveCard').disabled = false; fitScreen(); }
 });
 
 let rec = null;
@@ -652,14 +690,19 @@ function showClip(blob, ext) {
 }
 
 $('saveClip').addEventListener('click', async () => {
-	if (rec) return;
+	if (rec || preparingClip) return;
+	preparingClip = true;
+	const generation = ++exportGeneration;
+	try {
 	await document.fonts.ready;
+	await logo.decode().catch(() => {});
 	const W = 1280, H = 720, out = document.createElement('canvas');
 	out.width = W; out.height = H;
 	stepWorld.shot = false;
 	openDialog('Recording your clip', out, 'Preparing…');
 	$('dlgPost').setAttribute('aria-disabled', 'true');
 	const wc = await startEncoder(W, H).catch(() => null);
+	if (generation !== exportGeneration || !dlg.open) { wc?.enc.close(); return; }
 	if (wc) { rec = { kind: 'wc', ...wc, out, ctx: out.getContext('2d'), W, H, n: 0, cancelled: false }; return; }
 
 	// Fallback: MediaRecorder in realtime. Hold the clip clock until the encoder is actually delivering data.
@@ -677,6 +720,7 @@ $('saveClip').addEventListener('click', async () => {
 		if (!rr || rr.cancelled) return;
 		showClip(new Blob(chunks, { type: mime.split(';')[0] }), mime.startsWith('video/mp4') ? 'mp4' : 'webm');
 	};
+	} finally { preparingClip = false; }
 });
 
 async function finishEncoder() {
@@ -758,7 +802,7 @@ async function boot() {
 	};
 	addEventListener('resize', onResize);
 	new ResizeObserver(() => frameView(innerWidth, innerHeight)).observe(document.querySelector('.bottom'));
-	const q = new URLSearchParams(location.search);
+	const q = new URLSearchParams(location.search.length <= 4096 ? location.search : '');
 	try {
 		const raw = JSON.parse(q.get('r') || 'null');
 		if (raw?.v === 1) {
@@ -771,11 +815,11 @@ async function boot() {
 	renderer.setAnimationLoop(frame);
 	requestAnimationFrame(() => $('status').classList.add('done'));
 
-	const t = (q.get('t') || '').slice(0, 64);
+	const t = [...($('text').value || q.get('t') || '')].slice(0, MAX_LEN).join('');
 	if (t) { $('text').value = t; await writeText(t); }
 	else {
 		// first visit: a galaxy gathers itself into "write anything", with an arrow pointing at the input
-		setTimeout(writeIntro, reduceMotion ? 0 : 1400);
+		setTimeout(() => { if (!formation && !writtenText && !imageBusy) writeIntro(); }, reduceMotion ? 0 : 1400);
 	}
 }
 boot();

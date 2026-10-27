@@ -1,0 +1,2 @@
+#!/bin/sh
+exec python tools/scan_secrets.py --staged

@@ -22,6 +22,8 @@ Type anything and watch a galaxy spell it. Drop in an image and the stars become
 - The pointer push and the shockwave are stateless shader effects: a ray in the stars' local space, and an expanding ring.
 - `gen.js` turns any string into galaxy parameters (type, arms, twist, palette), so the same words always give the same galaxy.
 - Clips are encoded frame by frame with WebCodecs + [mp4-muxer](https://github.com/Vanilagy/mp4-muxer) at exactly 30 fps, with MediaRecorder as a fallback.
+- Encoded images are limited to 20 MiB and validated before decoding (16 MiPixels, 8192 pixels per side). PNG, JPEG, static WebP and bounded GIF inputs are supported; SVG and animated WebP are rejected. Only one image decodes at a time.
+- The UI paints before staged engine imports. Sampling yields between short batches so typing and controls stay responsive. All vendor code remains self-hosted and hash-pinned.
 
 ## Files
 
@@ -30,4 +32,6 @@ Type anything and watch a galaxy spell it. Drop in an image and the stars become
 | `index.html` | markup, import map, fonts |
 | `main.js` | renderer, TSL star material, sampling, interaction, exports |
 | `gen.js` | deterministic string → galaxy parameters |
+| `boot.js` | paint-first, staged engine loading |
+| `image-input.js` | raster signature/dimension checks before decode |
 | `style.css` | UI |

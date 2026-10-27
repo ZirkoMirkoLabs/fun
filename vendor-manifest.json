@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "write-in-stars/vendor/mp4-muxer-5.2.1/mp4-muxer.min.mjs",
+      "package": "mp4-muxer",
+      "version": "5.2.1",
+      "sha256": "e65425bcafa77723e9f9957fd5397325747ef61c0b85a5c52bf23349cc302d3d",
+      "source": "https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.1/build/mp4-muxer.min.mjs",
+      "upstream": "https://registry.npmjs.org/mp4-muxer/-/mp4-muxer-5.2.1.tgz",
+      "note": "Existing jsDelivr/Terser minified snapshot; byte hash pins these bytes, not future CDN output.",
+      "verification": "Exact match to downloaded source during the 2026-10-28 audit."
+    },
+    {
+      "path": "write-in-stars/vendor/three-0.186.0/three.core.min.js",
+      "package": "three",
+      "version": "0.186.0",
+      "sha256": "f3556fb8c9aff8fc6f8e090b918ae5d4e6b45152afb93815002d3319d875cdec",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.core.min.js",
+      "upstream": "https://registry.npmjs.org/three/-/three-0.186.0.tgz",
+      "note": "Existing jsDelivr/Terser minified snapshot; byte hash pins these bytes, not future CDN output.",
+      "verification": "Exact match to downloaded source during the 2026-10-28 audit."
+    },
+    {
+      "path": "write-in-stars/vendor/three-0.186.0/three.tsl.min.js",
+      "package": "three",
+      "version": "0.186.0",
+      "sha256": "878e96a7f5f8834a25a0ce15c25e0bb922a5e42eb577db3d1143c370dc44e7fe",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.tsl.min.js",
+      "upstream": "https://registry.npmjs.org/three/-/three-0.186.0.tgz",
+      "note": "Existing jsDelivr/Terser minified snapshot; byte hash pins these bytes, not future CDN output.",
+      "verification": "Exact match to downloaded source during the 2026-10-28 audit."
+    },
+    {
+      "path": "write-in-stars/vendor/three-0.186.0/three.webgpu.min.js",
+      "package": "three",
+      "version": "0.186.0",
+      "sha256": "76c75ce5920fd41fab2ebc5b6f5887036d153ee0e2bf54d5658b7f051337eef7",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.webgpu.min.js",
+      "upstream": "https://registry.npmjs.org/three/-/three-0.186.0.tgz",
+      "note": "Existing jsDelivr/Terser minified snapshot; byte hash pins these bytes, not future CDN output.",
+      "verification": "Matches downloaded source after changing ./three.core.js to ./three.core.min.js for self-hosting.",
+      "upstream_sha256": "7b792679372661f433a53c6a17f44c5ce130f650f9541bd0ec27419fdc69573e",
+      "modifications": [
+        "./three.core.js -> ./three.core.min.js"
+      ]
+    },
+    {
+      "path": "write-in-stars/vendor/three-0.186.0/LICENSE.txt",
+      "package": "three",
+      "version": "0.186.0",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "source": "https://cdn.jsdelivr.net/npm/three@0.186.0/LICENSE",
+      "verification": "License retrieved from the same published package; LF normalized."
+    },
+    {
+      "path": "write-in-stars/vendor/mp4-muxer-5.2.1/LICENSE.txt",
+      "package": "mp4-muxer",
+      "version": "5.2.1",
+      "sha256": "75c54aae7ef6ad652f684f9dd3b71e4dcef86ccebd88cf441ceed7f5eec037c5",
+      "source": "https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.1/LICENSE",
+      "verification": "License retrieved from the same published package; LF normalized."
+    }
+  ]
+}

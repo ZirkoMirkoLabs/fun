@@ -30,3 +30,9 @@ python -m http.server 8000
 ```
 
 Then open http://localhost:8000.
+
+## Before committing
+
+Install the local secret hook once per clone: `git config --local core.hooksPath .githooks`.
+
+Run `python tools/scan_secrets.py --staged` and `node tools/test_image_input.mjs`. Then run `python tools/build_site.py` in the sibling `zirkomirko-site` repo to sync and validate the hosted result. It owns the CSP, URL, metadata, vendor-hash and size checks. Review both repositories before committing. See [SECURITY.md](SECURITY.md) and [vendor-manifest.json](vendor-manifest.json).

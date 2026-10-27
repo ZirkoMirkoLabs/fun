@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<title>Write in Stars · ZirkoMirko</title>
-	<meta name="description" content="Type anything and watch a galaxy of 60,000 stars spell it. Drop in an image and the stars become it. A free browser toy by ZirkoMirko.">
+	<meta name="description" content="Type anything and watch a galaxy of stars spell it. Drop in an image and the stars become it. A free browser toy by ZirkoMirko.">
 	<link rel="canonical" href="https://zirkomirko.com/fun/projects/write-in-stars/">
 	<meta name="theme-color" content="#000000">
 	<meta name="color-scheme" content="dark">
@@ -22,22 +22,24 @@
 	<link rel="icon" href="zm_logo.png">
 	<link rel="preload" href="fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preload" href="fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="stylesheet" href="style.css">
 	<script type="importmap">{"imports":{"three":"./vendor/three-0.186.0/three.webgpu.min.js","three/webgpu":"./vendor/three-0.186.0/three.webgpu.min.js","three/tsl":"./vendor/three-0.186.0/three.tsl.min.js"}}</script>
-	<link rel="modulepreload" href="vendor/three-0.186.0/three.core.min.js" fetchpriority="low">
-	<link rel="modulepreload" href="vendor/three-0.186.0/three.webgpu.min.js" fetchpriority="low">
-	<link rel="modulepreload" href="vendor/three-0.186.0/three.tsl.min.js" fetchpriority="low">
-	<link rel="modulepreload" href="main.js">
-	<link rel="modulepreload" href="gen.js">
-	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Write in Stars","url":"https://zirkomirko.com/fun/projects/write-in-stars/","description":"Type anything and watch a galaxy of stars spell it. Drop in an image and the stars become it.","applicationCategory":"EntertainmentApplication","operatingSystem":"Any (modern browser with WebGPU or WebGL 2)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://zirkomirko.com/fun/projects/write-in-stars/og.jpg","author":{"@type":"Organization","name":"ZirkoMirko","url":"https://zirkomirko.com/"}}</script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","@id":"https://zirkomirko.com/fun/projects/write-in-stars/#app","name":"Write in Stars","url":"https://zirkomirko.com/fun/projects/write-in-stars/","description":"Type anything and watch a galaxy of stars spell it. Drop in an image and the stars become it.","applicationCategory":"EntertainmentApplication","operatingSystem":"Any with a supported modern browser","browserRequirements":"JavaScript and WebGPU or WebGL 2. MP4 export requires a supported browser encoder.","isAccessibleForFree":true,"inLanguage":"en","featureList":["Text and emoji star formations","Local image sampling","Palette and shape controls","PNG image export","Six-second video export","Share links for text and remix settings"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://zirkomirko.com/fun/projects/write-in-stars/og.jpg","author":{"@type":"Organization","name":"ZirkoMirko","url":"https://zirkomirko.com/"},"isBasedOn":{"@type":"SoftwareSourceCode","codeRepository":"https://github.com/ZirkoMirkoLabs/fun/tree/main/projects/write-in-stars","programmingLanguage":"JavaScript"}}</script>
 </head>
 <body>
 	<canvas id="sky" aria-label="A galaxy of stars. Move across it to push stars, tap for a shockwave, scroll to zoom."></canvas>
 
 	<h1 class="sr-only">Write in Stars: type anything and watch a galaxy spell it</h1>
+	<section class="sr-only" aria-label="About Write in Stars">
+		<p>Write in Stars is a free interactive browser toy by ZirkoMirko. Type a word, phrase or emoji, up to 28 characters, and a galaxy of stars forms it. Choose, drop or paste a PNG, JPEG, WebP or GIF to turn its pixels into stars. Images are limited to 20 MB, 16 megapixels and 8192 pixels per side.</p>
+		<p>Move through the galaxy, tap for a shockwave, scroll to zoom, or change its palette and shape with Remix. Save a PNG image or a six-second clip. MP4 export uses WebCodecs when supported; the browser may use WebM as a fallback. Text and images are processed on your device. Copied links include text and remix settings, never the image.</p>
+		<p>A modern browser with WebGPU or WebGL 2 and JavaScript is required. <a href="https://github.com/ZirkoMirkoLabs/fun/tree/main/projects/write-in-stars" rel="noopener" target="_blank">Read the source code</a> or the <a href="/privacy/">privacy details</a>.</p>
+	</section>
+	<noscript><section class="no-script"><h2>Write in Stars needs JavaScript</h2><p>Type words or choose an image to form a galaxy, remix it, and save a PNG or a six-second clip. Everything you make is processed in your browser. Enable JavaScript in a browser with WebGPU or WebGL 2 to play.</p><p><a href="/fun/projects/">Browse the projects</a> · <a href="/privacy/">Privacy</a></p></section></noscript>
 
 	<header class="top">
-		<a class="brand" href="https://zirkomirko.com/fun/projects/" aria-label="ZirkoMirko fun projects">
+		<a class="brand" href="/fun/projects/" aria-label="ZirkoMirko fun projects">
 			<img src="zm_logo.webp" alt="ZirkoMirko" width="44" height="37">
 			<span class="lab">Write in Stars</span>
 		</a>
@@ -48,7 +50,7 @@
 
 	<div class="bottom">
 		<form id="form" class="composer" autocomplete="off">
-			<input id="imageFile" type="file" accept="image/*" class="sr-only" tabindex="-1" aria-label="Choose an image">
+			<input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="sr-only" tabindex="-1" aria-label="Choose an image">
 			<button type="button" id="imageBtn" class="img-btn" aria-label="Use an image" title="Use an image">
 				<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" fill="currentColor"/><path d="M4 17.5l5-4.8 3.6 3.3 2.6-2.3L20 17.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
 				<span class="img-label">Image</span>

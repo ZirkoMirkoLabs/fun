@@ -2,7 +2,7 @@
 
 Type anything and watch a galaxy spell it. Drop in an image and the stars become it.
 
-**Play:** [zirkomirko.com/fun/write-in-stars](https://zirkomirko.com/fun/write-in-stars/)
+**Play:** [zirkomirko.com/fun/projects/write-in-stars](https://zirkomirko.com/fun/projects/write-in-stars/)
 
 ![Write in Stars](poster.jpg)
 

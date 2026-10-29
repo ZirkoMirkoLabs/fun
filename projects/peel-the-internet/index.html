@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Just a page. No hidden messages. Nothing unusual at all. A small experiment by ZirkoMirko." />
+    <link rel="icon" href="./ZM_logo_black.svg" type="image/svg+xml" />
+    <title>Backstage of the Internet · ZirkoMirko</title>
+    <link rel="canonical" href="https://zirkomirko.com/fun/projects/peel-the-internet/" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZirkoMirko" />
+    <meta property="og:title" content="Never peel a website." />
+    <meta property="og:description" content="Peel the corner. Meet the tiny crew holding the internet up. They will fight you for it." />
+    <meta property="og:url" content="https://zirkomirko.com/fun/projects/peel-the-internet/" />
+    <meta property="og:image" content="https://zirkomirko.com/fun/projects/peel-the-internet/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tiny lime workers caught under a peeled web page holding a sign that says ok you got us" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Zirkomirko" />
+    <script type="module" crossorigin src="./assets/index-FnVf2ujT.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor/three-0.180.0/three-KWpCbf5T.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DwRLC30h.css">
+  </head>
+  <body>
+    <main id="app" aria-label="Backstage of the Internet, an interactive paper experiment">
+      <div id="stage">
+        <canvas id="scene" aria-hidden="true"></canvas>
+        <div id="beat-caption" aria-hidden="true"></div>
+        <div id="grab" aria-hidden="true"></div>
+        <div class="sr-only" id="page-description">
+          ZirkoMirko. Nothing to see here. Just a page. No hidden messages.
+          Nothing unusual at all. Or is there? Drag the bottom-right corner toward
+          the top-left, or use the Peel the page button.
+        </div>
+        <section id="fallback" hidden aria-label="Static page">
+          <div class="fallback-brand"><img src="./ZM_logo_black.svg" alt="ZM" /> ZIRKOMIRKO</div>
+          <h1>nothing to<br />see here.</h1>
+          <p>Just a page.<br />No hidden messages.<br />Nothing unusual at all.</p>
+          <p class="fallback-note">The interactive paper needs WebGL, which isn’t available here. This is the still version.</p>
+        </section>
+      </div>
+      <footer>
+        <span class="edition">BACKSTAGE OF THE INTERNET <span aria-hidden="true">/</span> 002</span>
+        <div class="controls">
+          <span id="cue" aria-hidden="true">a little curiosity goes a long way</span>
+          <button id="peel" aria-describedby="page-description">Peel the page <span aria-hidden="true">↖</span></button>
+          <button id="replay" hidden>Replay <span aria-hidden="true">↻</span></button>
+        </div>
+      </footer>
+      <p id="status" class="sr-only" role="status" aria-live="polite">Ready to peel.</p>
+    </main>
+  </body>
+</html>

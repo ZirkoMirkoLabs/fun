@@ -143,6 +143,9 @@ def main(argv=None):
         if argv[0] == 'mcp':
             from .mcp_server import main as mcp_main
             return mcp_main(argv[1:]) or 0
+        if argv[0] == 'effects':
+            from .effects import main as effects_main
+            return effects_main(argv[1:])
         legacy = argv[0] != 'snap'
         args = _parser().parse_args(argv if legacy else argv[1:])
         palette_text = args.palette_file.read_text(encoding='utf-8-sig') if args.palette_file else args.custom_palette

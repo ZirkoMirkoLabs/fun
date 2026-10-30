@@ -395,6 +395,54 @@
       "version": "OFL snapshot 2026-10-30",
       "sha256": "86c5e9c9382cdcc5948704fdfe60f2aa164a719746931219a42736ecd9cefbd3",
       "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/silkscreen/OFL.txt"
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/LICENSE.txt",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "0a77565a50c3462831244452f129c38d2adc4fd07897cbeba8adc943f958604e",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/NOTICE.txt",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "5a324717a7b860e64dccc3c49a1f53794a3e3cd0d8dcbc83926ac5340ea432db",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/pixelfx.mjs",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "643a4086d393e1ad45db1836f1e08e98c907ec76dd6e7257e79682080897fd09",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/gifenc.mjs",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "b0e52cf1e94ac48b0c4cf0cc80d4d9f9e934fe80656c263d0eca9aa4db3417f8",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/LICENSE.txt",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "1610b01533a777ff952669a7d4fcb1e03b0d088c3409fd606d130f2d97cb017f",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/NOTICE.txt",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "38f4a4a8a288780264137086fdca08206f5e45677f3867b5ff1a8e6c1fbc5fd7",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
     }
   ]
 }

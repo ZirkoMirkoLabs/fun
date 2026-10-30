@@ -27,4 +27,4 @@ version = {attr = "pixelsnap.__version__"}
 include = ["pixelsnap*"]
 
 [tool.setuptools.package-data]
-pixelsnap = ["static/*", "presets.json"]
+pixelsnap = ["static/*", "presets.json", "effects_runner.mjs", "effects_runtime/*.mjs", "effects_runtime/*.txt", "effects_runtime/*.json", "effects_runtime/vendor/*/*"]

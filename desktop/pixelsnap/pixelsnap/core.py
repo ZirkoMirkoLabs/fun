@@ -349,6 +349,11 @@ def detect_grid(image, cell=None, cell_y=None, offset_x=None, offset_y=None, *, 
             estimates = [AxisGrid(size, float(o or 0), 0., 'fallback') for o in (offset_x, offset_y)]
         elif hud_evidence(rgba, estimates[0].cell, estimates[1].cell):
             estimates = [AxisGrid(a.cell / 2, float(o or 0), a.confidence, 'regional') for a, o in zip(estimates, (offset_x, offset_y))]
+    from .grid_safety import coarse_sprite_grid
+    if coarse_sprite_grid(rgba, estimates, (cell, cell_y)):
+        # Keep detail when body/limb spacing would collapse a small cut-out.
+        # This is explicitly an approximation, not a recovered 2px grid.
+        estimates = [AxisGrid(2., float(o or 0), 0., 'fallback') for o in (offset_x, offset_y)]
     return Grid(*estimates)
 
 

@@ -2,6 +2,7 @@
 export class PixelEditor {
  constructor(onChange){this.onChange=onChange;this.tool='pencil';this.color='#84f800';this.undoStack=[];this.redoStack=[];this.enabled=false;}
  set(image){this.width=image.width;this.height=image.height;this.data=new Uint8ClampedArray(image.data);this.original=this.data.slice();this.undoStack=[];this.redoStack=[];this.stroke=null;}
+ apply(data){if(data.length!==this.data.length)throw Error('Effect size changed.');this.stroke=new Map();for(let i=0;i<data.length;i+=4)if([0,1,2,3].some(k=>data[i+k]!==this.data[i+k])){this.stroke.set(i,Array.from(this.data.slice(i,i+4)));this.data.set(data.subarray(i,i+4),i);}this.end();}
  rgba(){return this.tool==='eraser'?[0,0,0,0]:[...this.color.slice(1).match(/../g).map(x=>parseInt(x,16)),255];}
  sample(x,y){const i=(y*this.width+x)*4;return this.data[i+3]?'#'+Array.from(this.data.slice(i,i+3),v=>v.toString(16).padStart(2,'0')).join(''):'transparent';}
  begin(x,y){if(!this.data)return;if(this.tool==='eyedropper'){const c=this.sample(x,y);if(c!=='transparent')this.color=c;this.onChange(false);return;}this.stroke=new Map();this.last=null;if(this.tool==='fill')this.fill(x,y);else this.paint(x,y);}

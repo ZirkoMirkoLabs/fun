@@ -1,0 +1,194 @@
+[
+  {
+    "id": "arcane/arcane-orb",
+    "name": "Arcane orb",
+    "description": "A floating orb of smoky violet glass with a swirl turning round a white-hot heart, two tilted rings of light orbiting behind and in front.",
+    "category": "arcane",
+    "duration": 2.4,
+    "loop": true
+  },
+  {
+    "id": "arcane/portal",
+    "name": "Portal",
+    "description": "An upright rift: fibrous spiral arms wind down into the dark, a lit rim wobbles, motes and streaks are pulled in, the floor glows.",
+    "category": "arcane",
+    "duration": 2.4,
+    "loop": true
+  },
+  {
+    "id": "arcane/rune-circle",
+    "name": "Rune circle",
+    "description": "A rune circle turns on the floor in perspective: a carousel of runes lit by chasing light, a turning square, ticks, motes rising off it.",
+    "category": "arcane",
+    "duration": 4,
+    "loop": true
+  },
+  {
+    "id": "explosions/firework-burst",
+    "name": "Firework burst",
+    "description": "A shell climbs, slows and bursts into a sphere of coloured trailing stars round a gold core; they droop, crackle into white pops and fade, leaving glitter.",
+    "category": "explosions",
+    "duration": 3.6,
+    "loop": false
+  },
+  {
+    "id": "explosions/small-explosion",
+    "name": "Explosion",
+    "description": "A ground blast: a white flash and shock rings, fire that cools into a rolling smoke column, sparks, burning brands that land and keep burning, tumbling rocks and a glowing scorch.",
+    "category": "explosions",
+    "duration": 5.4,
+    "loop": false
+  },
+  {
+    "id": "explosions/smoke-bomb",
+    "name": "Smoke bomb",
+    "description": "A round canister clinks down, fuse sparking, and pops: thick grey-violet smoke gushes out, rolls along the floor, billows into a cloud that hides all, then thins to wisps.",
+    "category": "explosions",
+    "duration": 5,
+    "loop": false
+  },
+  {
+    "id": "fire/campfire",
+    "name": "Campfire",
+    "description": "Crossed logs on a bed of coals and a lively fire: tongues that lick and leap, popping sparks, embers drifting up, smoke curling off, a warm pool of light.",
+    "category": "fire",
+    "duration": 3,
+    "loop": true
+  },
+  {
+    "id": "fire/candle",
+    "name": "Candle",
+    "description": "A wax candle in a brass dish: a calm flame with a blue root that sways and stretches, a halo of light, motes drifting in it, a bead of wax running down a drip.",
+    "category": "fire",
+    "duration": 4,
+    "loop": true
+  },
+  {
+    "id": "fire/torch",
+    "name": "Torch",
+    "description": "A wall torch on an iron bracket: a licking flame leaping off a pitch-soaked wrap, licks and puffs torn off its tips, smoke, embers, a flickering light on the wall.",
+    "category": "fire",
+    "duration": 2,
+    "loop": true
+  },
+  {
+    "id": "ice/ice-crystal",
+    "name": "Ice crystal",
+    "description": "A floating ice crystal turning slowly in its own cold light: its facets brighten and darken as they turn, glints flash on them, frost motes circle it.",
+    "category": "ice",
+    "duration": 3,
+    "loop": true
+  },
+  {
+    "id": "ice/snowflake-burst",
+    "name": "Snowflake burst",
+    "description": "A cold pop: frost gathers and flashes white in a ring, then crisp six-armed snowflakes spin out, slow, twinkle and drift down to settle and melt.",
+    "category": "ice",
+    "duration": 3.2,
+    "loop": false
+  },
+  {
+    "id": "impacts/hit-spark",
+    "name": "Hit spark",
+    "description": "The everyday hit: a sharp, lopsided cross flare with one long ray along the blow round a white diamond core, then a cone of sparks and hot chips that fall and bounce.",
+    "category": "impacts",
+    "duration": 0.5,
+    "loop": false
+  },
+  {
+    "id": "lightning/ball-lightning",
+    "name": "Ball lightning",
+    "description": "A crackling ball of plasma drifts on a wandering loop, spitting arcs off its skin and leaving a wake of fading motes, and zaps the floor when it dips low.",
+    "category": "lightning",
+    "duration": 4,
+    "loop": true
+  },
+  {
+    "id": "lightning/lightning-strike",
+    "name": "Lightning strike",
+    "description": "A targeted strike: a sigil charges on the floor, the scene darkens, a thick bolt slams into it, arcs race out along the cracks it splits, the channel crumbles to a scorch.",
+    "category": "lightning",
+    "duration": 3,
+    "loop": false
+  },
+  {
+    "id": "nature/healing-bloom",
+    "name": "Healing bloom",
+    "description": "A sprout pushes up and unfurls, a bud swells and opens round a glowing golden heart in a flare of healing light; its petals lift away one by one as motes.",
+    "category": "nature",
+    "duration": 3.3,
+    "loop": false
+  },
+  {
+    "id": "nature/poison-cloud",
+    "name": "Poison cloud",
+    "description": "A miasma hugging the floor: ragged sheets of gas lit yellow-green from within, fading to violet, creep out in tongues that curl over at their tips; plumes twist up as ribbons.",
+    "category": "nature",
+    "duration": 4,
+    "loop": true
+  },
+  {
+    "id": "pickups/collect-burst",
+    "name": "Collect burst",
+    "description": "The moment of pickup: a white flash and a cross of light, a thin ring snapping out ahead of a softer one, twinkles thrown wide on curving paths that brake, hang and wink out.",
+    "category": "pickups",
+    "duration": 1.35,
+    "loop": false
+  },
+  {
+    "id": "water/bubbles",
+    "name": "Bubbles",
+    "description": "Bubbles stream up from a vent of pebbles, wobbling and swelling as they rise, flare as they cross shafts of light from the surface, then dome up and pop there.",
+    "category": "water",
+    "duration": 4,
+    "loop": true
+  },
+  {
+    "id": "water/ripples",
+    "name": "Ripples",
+    "description": "A drop plinks on still dark water and rings spread out across it at a low angle: the swell of each ring catches the light, crests glint, and they fade into the calm.",
+    "category": "water",
+    "duration": 2,
+    "loop": true
+  },
+  {
+    "id": "water/splash",
+    "name": "Splash",
+    "description": "A stone drops into still water: a white hit, a crown that tears into droplets arcing out to plink down with rings, a jet that bounces back, foam and drifting mist.",
+    "category": "water",
+    "duration": 2.5,
+    "loop": false
+  },
+  {
+    "id": "weather/fireflies",
+    "name": "Fireflies",
+    "description": "Fireflies wander over a meadow at night, each glowing up and fading on its own rhythm, trailing light and lighting the grass tips beneath them.",
+    "category": "weather",
+    "duration": 12,
+    "loop": true
+  },
+  {
+    "id": "weather/rain",
+    "name": "Rain",
+    "description": "Slanted rain at four depths: far drops fade into the dark, near ones glint and splash, drops ring the puddles and a low mist drifts over the wet floor.",
+    "category": "weather",
+    "duration": 8,
+    "loop": true
+  },
+  {
+    "id": "weather/snow",
+    "name": "Snow",
+    "description": "Snow at three depths in a gusty breeze: far specks, drifting flakes, big near crystals that spin and glow; they settle on a sparkling drift and melt away.",
+    "category": "weather",
+    "duration": 12,
+    "loop": true
+  },
+  {
+    "id": "ui/confetti",
+    "name": "Confetti",
+    "description": "Two party poppers bang one after the other: paper bits and curly streamers burst out, stall, then tumble and flutter down, flipping, and settle on the floor.",
+    "category": "ui",
+    "duration": 3.4,
+    "loop": false
+  }
+]

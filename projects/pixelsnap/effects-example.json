@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "name": "Emerald sparks",
+  "fps": 15,
+  "duration": 2,
+  "loop": true,
+  "layers": [
+    {"effect": "pixel/tint", "color": "#84f800", "amount": 0.2},
+    {"effect": "weather/fireflies", "seed": 7, "opacity": 0.85,
+     "palette": ["#123414", "#3c821e", "#84f800", "#edffd5"]}
+  ]
+}

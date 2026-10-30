@@ -68,3 +68,7 @@ Validation (2026-10-30): 104 Python tests, 20 full-image comparisons and 160 pre
 Version generation accepts base options (`variants(image, presets=None, options=None)` in Python; `variants(data, width, height, names, baseOptions)` in JavaScript). Each preset overrides only its own keys, with one recovered-grid detection shared across versions. The browser rebuilds tiles when sticky toggles change and labels the current output with its actual nontransparent RGB palette count. Notices distinguish background removal, painted checkerboard removal and source transparency.
 
 The v3 parity scripts also compare 160 variants with transparency, cleanup and dithering enabled. Run `node tools/test_pixelsnap_v31.mjs` for the toggle/palette regressions and `python tools/test_pixelsnap_v31_ui.py --output G:/tmp/pixelsnap-v31/live` for all nine examples at 1440/390 px, including thumbnails, toggle changes, selected PNG bytes and palette counts.
+
+## PixelSnap 3.1.0 effects
+
+24 pixelfx overlays, 3 pixel operations, validated JSON recipes, preview PNG, GIF and sprite-sheet export. Effects use the same JS renderer in browser and CLI/MCP (Node 18+ required for CLI/MCP effects). See [effects-guide.txt](effects-guide.txt). Effects load automatically with one-click thumbnails, a Surprise button and undoable application.

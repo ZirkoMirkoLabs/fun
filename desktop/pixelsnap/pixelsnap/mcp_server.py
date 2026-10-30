@@ -141,6 +141,72 @@ def create_server(input_root, output_root):
         finally:
             lock.release()
 
+    @server.tool(annotations={'readOnlyHint': True, 'openWorldHint': False})
+    def list_effects() -> dict:
+        """List approved effect IDs, animation metadata, runtime needs and limits."""
+        from .effects import list_effects as listing
+        return listing()
+
+    @server.tool(annotations={'readOnlyHint': True, 'openWorldHint': False})
+    def validate_effect(recipe: dict) -> dict:
+        """Validate a version-1 JSON effect recipe. Never executes agent-provided code.
+
+        Use 1-4 layers with approved effect IDs, x/y (0-1), scale (.1-4),
+        opacity (0-1), seed, clip, optional palette (#rrggbb list), color, amount.
+        Top-level: version=1, name, fps (1-30), duration (.1-8), loop, layers.
+        Maximum 120 frames. Returns a normalized recipe for preview/apply.
+        """
+        from .effects import validate_effect as validate
+        return {'valid': True, 'recipe': validate(recipe)}
+
+    def effect_job(path, effect, recipe, frame, format):
+        from .effects import apply_effect as render
+        if not lock.acquire(blocking=False):
+            return {'status': 'error', 'error': 'busy'}
+        try:
+            candidate = Path(path)
+            candidate = (candidate if candidate.is_absolute() else inputs/candidate).resolve()
+            # Output-root inputs allow chaining snap_image -> apply_effect.
+            if not any(candidate.is_relative_to(root) for root in (inputs, outputs)):
+                raise ValueError('Input is outside the configured input/output roots.')
+            return render(candidate, outputs, effect, recipe, frame, format)
+        except Exception as exc:
+            return {'status': 'error', 'error': str(exc)}
+        finally:
+            lock.release()
+
+    @server.tool(annotations={'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False})
+    def preview_effect(path: str, effect: str | None = None, recipe: dict | None = None, frame: int | None = None):
+        """Render a PNG preview of snapped pixels and return image content for visual review.
+
+        Supply exactly one approved effect ID or validated JSON recipe. Input may
+        be in input_root or output_root (for snap_image chaining). Requires Node 18+.
+        Writes a unique PNG in output_root. Omitted frame selects 45% through the
+        animation, avoiding often-empty initial frames. Explicit frame=0 is supported.
+        Does not accept executable effects.
+        """
+        import base64
+        import json
+        from mcp.types import CallToolResult, TextContent, ImageContent
+        result = effect_job(path, effect, recipe, frame, 'png')
+        content = [TextContent(type='text', text=json.dumps(result))]
+        if result.get('status') == 'ok':
+            content.append(ImageContent(type='image', mimeType='image/png',
+                                       data=base64.b64encode(Path(result['outputs']['png']).read_bytes()).decode()))
+        return CallToolResult(content=content, structuredContent=result, isError=result.get('status') != 'ok')
+
+    @server.tool(annotations={'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False})
+    def apply_effect(path: str, effect: str | None = None, recipe: dict | None = None,
+                     frame: int | None = None, format: str = 'png') -> dict:
+        """Apply an effect to an already snapped image. Export png, gif or sheet + atlas JSON.
+
+        Same recipe, path policy and rendering as preview_effect and the browser.
+        512 px per side, 120 frames, 4 MiPixels total animation. GIF is 256-colour
+        binary alpha; PNG/sheets retain full alpha. Each result has a unique folder.
+        For PNG, omitted frame selects 45% through the animation; frame=0 is explicit.
+        """
+        return effect_job(path, effect, recipe, frame, format)
+
     return server
 
 

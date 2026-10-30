@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {listEffects,recipeFor,validateRecipe,createRenderer,renderSheet} from '../projects/pixelsnap/effects-core.mjs';
+import {renderGIF} from '../projects/pixelsnap/effects-export.mjs';
+import {exportPNG} from '../projects/pixelsnap/export-core.mjs';
+const output=process.argv[2]||'G:/tmp/pixelsnap-effects-validation';mkdirSync(output,{recursive:true});
+const image={width:32,height:32,data:new Uint8ClampedArray(32*32*4)};
+for(let y=6;y<28;y++)for(let x=8;x<24;x++)image.data.set(y<12?[240,170,100,255]:[50,90,150,255],(y*32+x)*4);
+writeFileSync(output+'/source.png',new Uint8Array(await exportPNG(image).arrayBuffer()));
+const catalog=listEffects();assert.equal(catalog.length,27);const hashes=[];
+for(const effect of catalog){const recipe=recipeFor(effect.id),r=createRenderer(image,recipe),index=Math.min(6,Math.ceil(recipe.fps*recipe.duration)-1),first=r.render(index);
+ assert.equal(first.data.length,image.data.length);r.render(0);assert.deepEqual(r.render(index).data,first.data,`${effect.id} seek determinism`);
+ assert.deepEqual(createRenderer(image,recipe).render(index).data,first.data,`${effect.id} repeated render`);
+ const clipped=createRenderer(image,{...recipe,layers:[{...recipe.layers[0],clip:true}]}).render(index);
+ for(let i=3;i<image.data.length;i+=4)if(!image.data[i])assert.equal(clipped.data[i],0,`${effect.id} clip`);
+ const empty={width:1,height:1,data:new Uint8ClampedArray(4)};assert.equal(createRenderer(empty,recipe).render(0).data.length,4);
+ writeFileSync(output+'/'+effect.id.replace('/','-')+'.png',new Uint8Array(await exportPNG(first).arrayBuffer()));
+ hashes.push({id:effect.id,frame:index,rgba:Buffer.from(first.data).toString('base64')});
+}
+const base=recipeFor('pixel/tint');
+for(const recipe of [{...base,version:2},{...base,fps:Infinity},{...base,fps:true},{...base,layers:[]},{...base,layers:Array(5).fill(base.layers[0])},{...base,code:'process.exit()'},{...base,layers:[{effect:'../../evil.js'}]},{...base,layers:[{effect:'__proto__'}]},{...base,layers:[{effect:'fire/torch',seed:-1}]},{...base,layers:[{effect:'fire/torch',clip:'true'}]},{...base,layers:[{effect:'fire/torch',palette:['red','blue']}]},{...base,duration:8,fps:30},JSON.parse('{"version":1,"name":"x","layers":[{"effect":"fire/torch","__proto__":{}}]}')])assert.throws(()=>validateRecipe(recipe));
+assert.throws(()=>createRenderer({...image,width:513},base));assert.throws(()=>createRenderer(image,base).render(-1));
+assert.throws(()=>renderSheet({width:512,height:512,data:new Uint8ClampedArray(512*512*4)},recipeFor('weather/rain')));
+const tint=createRenderer(image,{...base,layers:[{effect:'pixel/tint',color:'#ff0000',amount:1}]}).render(0);
+for(let i=0;i<image.data.length;i+=4){assert.equal(tint.data[i+3],image.data[i+3]);if(image.data[i+3])assert.deepEqual([...tint.data.subarray(i,i+3)],[255,0,0]);}
+const soft={...image,data:image.data.slice()};for(let i=3;i<soft.data.length;i+=4)if(soft.data[i])soft.data[i]=90;
+const masked=createRenderer(soft,{...recipeFor('fire/torch'),layers:[{effect:'fire/torch',clip:true}]}).render(6);
+for(let i=3;i<soft.data.length;i+=4)assert.equal(masked.data[i],soft.data[i],'Clip must preserve partial alpha as well as cut-outs');
+const recipe=recipeFor('fire/torch'),sheet=renderSheet(image,recipe),gif=renderGIF(image,recipe);
+writeFileSync(output+'/sheet.png',new Uint8Array(await exportPNG(sheet).arrayBuffer()));writeFileSync(output+'/sheet.json',JSON.stringify(sheet.atlas,null,2));writeFileSync(output+'/animation.gif',gif);
+writeFileSync(output+'/effects-parity.json',JSON.stringify(hashes));
+assert.equal(Buffer.from(gif.subarray(0,6)).toString(),'GIF89a');
+const f=sheet.atlas.frames['0006'].frame;for(let y=0;y<image.height;y++)assert.deepEqual(sheet.data.subarray(((f.y+y)*sheet.width+f.x)*4,((f.y+y)*sheet.width+f.x+image.width)*4),createRenderer(image,recipe).render(6).data.subarray(y*image.width*4,(y+1)*image.width*4));
+console.log(`PASS: ${catalog.length} effects, deterministic seek/repeat, empty input, alpha clipping, strict recipe rejection, limits, tint, sheet frame bytes and GIF signature.`);

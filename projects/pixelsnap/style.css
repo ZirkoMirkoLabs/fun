@@ -5,3 +5,20 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}}
 
 .examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.examples>span{grid-column:1/-1;width:100%;letter-spacing:1px;margin:0 0 4px}.examples button{padding:4px;min-width:0;text-align:left;background:#151812}.examples img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:#22261d}.examples button span{display:block;font-size:9px;padding:6px 2px 2px}.examples button[aria-pressed=true]{border-color:var(--green)}
+.guide{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:48px;padding:40px 0 36px;border-bottom:1px solid var(--line)}
+.guide h2{color:var(--green);margin-bottom:20px}
+.guide-list,.guide-steps{list-style:none;margin:0;padding:0}
+.guide-list li{position:relative;padding:0 0 0 20px;margin:0 0 12px;font-size:12px;line-height:1.55;color:var(--muted)}
+.guide-list li::before{content:"";position:absolute;left:0;top:5px;width:8px;height:8px;background:var(--green)}
+.guide strong,.guide dt{color:var(--cream);font-weight:600}
+.guide-steps li{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.55;color:var(--muted)}
+.guide-steps li:first-child{border-top:0;padding-top:0}
+.guide-steps b{font-family:Silkscreen,monospace;font-weight:400;font-size:16px;color:var(--green)}
+.guide code,.command-note code{font:11px monospace;color:var(--cream);background:#151812;padding:1px 4px}
+.guide a,.command-note a{color:var(--green)}
+.guide-why{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:12px;line-height:1.55}
+.guide-why dd{margin:0;color:var(--muted)}
+.guide-limit{margin:20px 0 0;padding-left:12px;border-left:2px solid var(--green);font-size:11px;line-height:1.6;color:var(--muted)}
+.command-note{grid-column:2;margin:-24px 0 0;font-size:11px;line-height:1.7;color:var(--muted)}
+@media(max-width:1050px){.guide{grid-template-columns:1fr 1fr;gap:32px}.guide-col:last-child{grid-column:1/-1}}
+@media(max-width:700px){.guide{grid-template-columns:1fr;gap:28px;padding:28px 0}.guide-why{grid-template-columns:1fr;gap:2px}.guide-why dd{margin-bottom:10px}.command-note{grid-column:1;margin:0}}

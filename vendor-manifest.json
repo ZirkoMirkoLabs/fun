@@ -381,6 +381,20 @@
       "source": "npm zustand 5.0.16/LICENSE",
       "upstream": "https://registry.npmjs.org/zustand/-/zustand-5.0.16.tgz",
       "verification": "License copied from installed package; LF normalized."
+    },
+    {
+      "path": "pixelsnap/vendor/silkscreen/silkscreen-latin.woff2",
+      "package": "Silkscreen",
+      "version": "OFL snapshot 2026-10-30",
+      "sha256": "e6c72ea4702249202bcdd79d3343057e4e25ef1f04e3fcffd8602ab53b40b4cc",
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/silkscreen@latest/latin-400-normal.woff2"
+    },
+    {
+      "path": "pixelsnap/vendor/silkscreen/OFL.txt",
+      "package": "Silkscreen",
+      "version": "OFL snapshot 2026-10-30",
+      "sha256": "86c5e9c9382cdcc5948704fdfe60f2aa164a719746931219a42736ecd9cefbd3",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/silkscreen/OFL.txt"
     }
   ]
 }

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pixelsnap"
+dynamic = ["version"]
+description = "Recover a true pixel grid from imperfect raster art, locally."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26,<3", "Pillow>=10.4,<13", "scipy>=1.12,<2"]
+
+[project.optional-dependencies]
+web = ["Flask>=3.0,<4", "waitress>=3.0,<4"]
+mcp = ["mcp>=1.12,<2"]
+dev = ["pytest>=8,<10", "build>=1,<2"]
+
+[project.scripts]
+pixelsnap = "pixelsnap.cli:main"
+pixelsnap-gui = "pixelsnap.cli:gui"
+
+[tool.setuptools.dynamic]
+version = {attr = "pixelsnap.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pixelsnap*"]
+
+[tool.setuptools.package-data]
+pixelsnap = ["static/*"]

@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import {sampleCells,processImage,cleanOrphans,parsePalette} from '../projects/pixelsnap/core.mjs';
+// Hidden RGB must never alter visible samples, including partial-alpha probes.
+for(const partial of [false,true]){const a=new Uint8ClampedArray(400),coords=[];for(const y of [3,5,6])for(const x of [3,5,6])coords.push((y*10+x)*4);const colors=[[255,0,0],[255,0,0],[0,255,0],[0,255,0],[0,0,255]];colors.forEach((v,i)=>a.set([...v,partial&&i===0?192:255],coords[i]));const b=a.slice();for(let i=0;i<b.length;i+=4)if(!b[i+3])b.fill(255,i,i+3);const axis={cell:10,offset:0,confidence:1,method:'manual'},grid={x:axis,y:axis};assert.deepEqual(sampleCells(a,10,10,grid,false).data,sampleCells(b,10,10,grid,false).data);}
+let seed=15;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed>>>24;};
+for(const [px,py] of [[2,2],[3,3],[4,4],[5,5],[4,8],[6,12],[8,16]]){const W=32,H=32,base=new Uint8ClampedArray(W*H*4);for(let i=0;i<base.length;i+=4)base.set([random(),random(),random(),255],i);const w=W*px,h=H*py,a=new Uint8ClampedArray(w*h*4);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(Math.floor(y/py)*W+Math.floor(x/px))*4;a.set(base.subarray(i,i+4),(y*w+x)*4);}const r=processImage(a,w,h,{colors:16});assert.deepEqual([r.width,r.height],[32,32]);assert.ok(Math.abs(r.grid.x.cell-px)<.04);assert.ok(Math.abs(r.grid.y.cell-py)<.04);}
+const a=new Uint8ClampedArray(7*7*4).fill(255);for(let i=1;i<6;i++)a.fill(0,(i*7+i)*4,(i*7+i)*4+3);assert.deepEqual(cleanOrphans(a,7,7),a);a.fill(255);a.fill(0,(3*7+3)*4,(3*7+3)*4+3);assert.ok(cleanOrphans(a,7,7).every(v=>v===255));
+assert.deepEqual(parsePalette('GIMP Palette\n0 0 0 black\n255 255 255 white'),['000000','ffffff']);assert.throws(()=>parsePalette('#ff00ff'));
+console.log('PixelSnap core: alpha invariance, small/rectangular grids, diagonal cleanup and GPL parsing passed.');

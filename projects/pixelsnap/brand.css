@@ -13,3 +13,6 @@ input[type=range]{appearance:none;background:transparent}input[type=range]::-web
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.version:hover:not(:disabled){transform:none}.voxel canvas{display:none}.voxel .voxel-still{opacity:1}}
 
 .voxel[data-state=snapping] canvas{animation:resolve 1.5s steps(8)}@keyframes resolve{0%{filter:blur(3px);opacity:.45}65%{filter:blur(0);opacity:1}}
+/* Silkscreen is drawn on an 8px grid: only use whole multiples so letters stay crisp (10px turned C into O). */
+h2,.eyebrow{font-size:16px;line-height:1.25;letter-spacing:0}.private,.voxel figcaption{font-size:8px;line-height:1.5}h2,.eyebrow,.private,.voxel figcaption{-webkit-font-smoothing:none;-moz-osx-font-smoothing:auto;font-smooth:never}.version small{font-family:inherit;font-size:11px;letter-spacing:0}
+.versions-heading h2{font-size:16px}

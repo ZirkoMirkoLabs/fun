@@ -1,0 +1,1 @@
+import{t as e}from"/fun/projects/driftlight/assets/app-env-C-GIay_Quf.js";var t={...e,captions:[]};export{t};

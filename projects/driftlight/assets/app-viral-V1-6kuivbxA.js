@@ -1,0 +1,1 @@
+import{a as e,n as t,r as n}from"/fun/projects/driftlight/assets/app-hero-core-C15zA0Ek.js";var r=5,i=t({D:r,beat:.5,gleam:.55,cam:t=>{let i=t/r*e;return{...n(.2+.12*Math.sin(i),3.6,-.3+.05*Math.cos(i),0,.12),fov:42}}});export{i as t};

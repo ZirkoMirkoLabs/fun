@@ -71,6 +71,68 @@
       "verification": "Built locally 2026-10-29 from the lockfile-pinned package."
     },
     {
+      "path": "pixelsnap/vendor/silkscreen/silkscreen-latin.woff2",
+      "package": "Silkscreen",
+      "version": "OFL snapshot 2026-10-30",
+      "sha256": "e6c72ea4702249202bcdd79d3343057e4e25ef1f04e3fcffd8602ab53b40b4cc",
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/silkscreen@latest/latin-400-normal.woff2"
+    },
+    {
+      "path": "pixelsnap/vendor/silkscreen/OFL.txt",
+      "package": "Silkscreen",
+      "version": "OFL snapshot 2026-10-30",
+      "sha256": "86c5e9c9382cdcc5948704fdfe60f2aa164a719746931219a42736ecd9cefbd3",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/silkscreen/OFL.txt"
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/LICENSE.txt",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "0a77565a50c3462831244452f129c38d2adc4fd07897cbeba8adc943f958604e",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/NOTICE.txt",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "5a324717a7b860e64dccc3c49a1f53794a3e3cd0d8dcbc83926ac5340ea432db",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/pixelfx-0.2.0/pixelfx.mjs",
+      "package": "patch-gg/pixelfx",
+      "version": "0.2.0",
+      "sha256": "643a4086d393e1ad45db1836f1e08e98c907ec76dd6e7257e79682080897fd09",
+      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/gifenc.mjs",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "b0e52cf1e94ac48b0c4cf0cc80d4d9f9e934fe80656c263d0eca9aa4db3417f8",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/LICENSE.txt",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "1610b01533a777ff952669a7d4fcb1e03b0d088c3409fd606d130f2d97cb017f",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
+      "path": "pixelsnap/vendor/gifenc-1.0.3/NOTICE.txt",
+      "package": "mattdesl/gifenc",
+      "version": "1.0.3",
+      "sha256": "38f4a4a8a288780264137086fdca08206f5e45677f3867b5ff1a8e6c1fbc5fd7",
+      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
+      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
+    },
+    {
       "path": "driftlight/assets/vendor/its-fine-2.1.1/its-fine-2.1.1-lg-O3Xla.js",
       "package": "its-fine",
       "version": "2.1.1",
@@ -81,7 +143,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/maath-0.10.8/maath-0.10.8-DJ5uCqkr.js",
@@ -94,7 +156,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/n8ao-2.0.1/n8ao-2.0.1-BAh7CMI7.js",
@@ -107,7 +169,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/postprocessing-6.39.5/postprocessing-6.39.5-BohjIVUS.js",
@@ -120,7 +182,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/react-19.3.1/react-19.3.1-CHvf5MSy.js",
@@ -133,46 +195,46 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
-      "path": "driftlight/assets/vendor/react-dom-19.3.1/react-dom-19.3.1-CYOQR6BR.js",
+      "path": "driftlight/assets/vendor/react-dom-19.3.1/react-dom-19.3.1-Cm-sDTxJ.js",
       "package": "react-dom",
       "version": "19.3.1",
-      "sha256": "e9b79a49255f6393f61767602b55f0b20da47cec3d946f406f121b0dbee73e1a",
+      "sha256": "d392dd0026150a80ff5ffd216edbf4183bea517b71126f86621a0864ebfa39f0",
       "source": "Vite 8.3.5 / Rolldown production chunk from npm react-dom 19.3.1",
       "upstream": "https://registry.npmjs.org/react-dom/-/react-dom-19.3.1.tgz",
       "upstream_integrity": "sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==",
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
-      "path": "driftlight/assets/vendor/react-three-fiber-9.8.2/react-three-fiber-9.8.2-BeFjkAv-.js",
+      "path": "driftlight/assets/vendor/react-three-fiber-9.8.2/react-three-fiber-9.8.2-DEYGw83e.js",
       "package": "@react-three/fiber",
       "version": "9.8.2",
-      "sha256": "f0ae57fa16cbfcb46c6fff86cd8f43b514b831c2d9006edb185fd6d50c29b199",
+      "sha256": "caef932f9b26a175ef55d71e32f2e759c23034f4a621edec0b114d70bd12b1d1",
       "source": "Vite 8.3.5 / Rolldown production chunk from npm @react-three/fiber 9.8.2",
       "upstream": "https://registry.npmjs.org/@react-three/fiber/-/fiber-9.8.2.tgz",
       "upstream_integrity": "sha512-6s0ejw0bT1myQ/aLLugcil8/zBmNnnHw/AISWF1yfDLOxfX3yYaTS+0IkpJITEnm/SSMLtxje6CJDt0i5Wu1Sw==",
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
-      "path": "driftlight/assets/vendor/react-three-postprocessing-3.2.2/react-three-postprocessing-3.2.2-lBGLiaBE.js",
+      "path": "driftlight/assets/vendor/react-three-postprocessing-3.2.2/react-three-postprocessing-3.2.2-DB548GQO.js",
       "package": "@react-three/postprocessing",
       "version": "3.2.2",
-      "sha256": "94a1a0dbd3b7a5585ad6cee643e2560d24a41405f5712cfac9348977107ff52c",
+      "sha256": "874667065681261f1d60d3aa27c0568d7496f245f67d0e39545a3bdbddb4f575",
       "source": "Vite 8.3.5 / Rolldown production chunk from npm @react-three/postprocessing 3.2.2",
       "upstream": "https://registry.npmjs.org/@react-three/postprocessing/-/postprocessing-3.2.2.tgz",
       "upstream_integrity": "sha512-y/ePU8gytOCAjQMy7At9gZFr/Xi/YGSHlNEir3fCY88+FoBpzL4RsTpzyKnrGshcD8wmJ5ppI5kWzz0dtNPkWQ==",
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/scheduler-0.28.0/scheduler-0.28.0-CFrjyury.js",
@@ -185,7 +247,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/suspend-react-0.1.3/suspend-react-0.1.3-DvMRww-v.js",
@@ -198,7 +260,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/three-0.186.1/three-0.186.1-BzThZzQM.js",
@@ -211,7 +273,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/three-0.186.1/three-0.186.1-D8ARWj-B.js",
@@ -224,7 +286,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/three-0.186.1/three-0.186.1-DaENcXVh.js",
@@ -237,7 +299,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/use-sync-external-store-1.7.0/use-sync-external-store-1.7.0-CGd2SvSe.js",
@@ -250,7 +312,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/zustand-5.0.16/zustand-5.0.16-BFWQ6eVp.js",
@@ -263,7 +325,7 @@
       "modifications": [
         "Tree-shaken and minified; imports rewritten to same-origin /fun/projects/driftlight/ URLs."
       ],
-      "verification": "Built locally 2026-10-30 from package-lock.json with vitreous/vite.site.config.js."
+      "verification": "Built locally 2026-10-30 from package-lock.json with driftlight-fast/vite.site.config.js."
     },
     {
       "path": "driftlight/assets/vendor/its-fine-2.1.1/LICENSE.txt",
@@ -381,68 +443,6 @@
       "source": "npm zustand 5.0.16/LICENSE",
       "upstream": "https://registry.npmjs.org/zustand/-/zustand-5.0.16.tgz",
       "verification": "License copied from installed package; LF normalized."
-    },
-    {
-      "path": "pixelsnap/vendor/silkscreen/silkscreen-latin.woff2",
-      "package": "Silkscreen",
-      "version": "OFL snapshot 2026-10-30",
-      "sha256": "e6c72ea4702249202bcdd79d3343057e4e25ef1f04e3fcffd8602ab53b40b4cc",
-      "source": "https://cdn.jsdelivr.net/fontsource/fonts/silkscreen@latest/latin-400-normal.woff2"
-    },
-    {
-      "path": "pixelsnap/vendor/silkscreen/OFL.txt",
-      "package": "Silkscreen",
-      "version": "OFL snapshot 2026-10-30",
-      "sha256": "86c5e9c9382cdcc5948704fdfe60f2aa164a719746931219a42736ecd9cefbd3",
-      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/silkscreen/OFL.txt"
-    },
-    {
-      "path": "pixelsnap/vendor/pixelfx-0.2.0/LICENSE.txt",
-      "package": "patch-gg/pixelfx",
-      "version": "0.2.0",
-      "sha256": "0a77565a50c3462831244452f129c38d2adc4fd07897cbeba8adc943f958604e",
-      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
-    },
-    {
-      "path": "pixelsnap/vendor/pixelfx-0.2.0/NOTICE.txt",
-      "package": "patch-gg/pixelfx",
-      "version": "0.2.0",
-      "sha256": "5a324717a7b860e64dccc3c49a1f53794a3e3cd0d8dcbc83926ac5340ea432db",
-      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
-    },
-    {
-      "path": "pixelsnap/vendor/pixelfx-0.2.0/pixelfx.mjs",
-      "package": "patch-gg/pixelfx",
-      "version": "0.2.0",
-      "sha256": "643a4086d393e1ad45db1836f1e08e98c907ec76dd6e7257e79682080897fd09",
-      "source": "https://github.com/patch-gg/pixelfx/tree/fe7103c36d94e02f2d7df7d8f7a341e493837cde",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
-    },
-    {
-      "path": "pixelsnap/vendor/gifenc-1.0.3/gifenc.mjs",
-      "package": "mattdesl/gifenc",
-      "version": "1.0.3",
-      "sha256": "b0e52cf1e94ac48b0c4cf0cc80d4d9f9e934fe80656c263d0eca9aa4db3417f8",
-      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
-    },
-    {
-      "path": "pixelsnap/vendor/gifenc-1.0.3/LICENSE.txt",
-      "package": "mattdesl/gifenc",
-      "version": "1.0.3",
-      "sha256": "1610b01533a777ff952669a7d4fcb1e03b0d088c3409fd606d130f2d97cb017f",
-      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
-    },
-    {
-      "path": "pixelsnap/vendor/gifenc-1.0.3/NOTICE.txt",
-      "package": "mattdesl/gifenc",
-      "version": "1.0.3",
-      "sha256": "38f4a4a8a288780264137086fdca08206f5e45677f3867b5ff1a8e6c1fbc5fd7",
-      "source": "https://github.com/mattdesl/gifenc/tree/27db5b982dba701ca440b55ea36fad3999040973",
-      "note": "Local esbuild bundle of pinned source; licence retained. Rebuild with tools/vendor_pixelsnap_effects.py."
     }
   ]
 }

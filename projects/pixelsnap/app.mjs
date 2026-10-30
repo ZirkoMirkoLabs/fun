@@ -4,7 +4,7 @@ import {imageCanvas,png,paletteOf,transparentImage,save} from './ui-export.mjs';
 import {exportSVG,exportPack,paletteHEX,paletteGPL} from './export-core.mjs';
 const $=id=>document.getElementById(id);
 let engine=null,source=null,result=null,after=null,epoch=0,revision=0,timer=null,baseName='pixelsnap',variants=[],active=-1,processing=false,exporting=false,presets=fallbackPresets;
-const editor=new PixelEditor(changed),view=new PixelView($('comparison'),editor,()=>{$('zoom').value='custom';},(hex,p)=>{$('pixelHex').textContent=`${p.x}, ${p.y} · ${hex.toUpperCase()}`;});
+const editor=new PixelEditor(changed),view=new PixelView($('comparison'),editor,()=>{$('zoom').value='custom';},(hex,p)=>{$('pixelHex').textContent=`${p.x}, ${p.y} · ${hex.toUpperCase()}`;});view.onSplit=v=>{$('compare').value=String(Math.round(v));};
 function showError(message){$('error').textContent=message;$('error').hidden=false;}
 function status(message){$('status').textContent=message;}
 function setBusy(value){processing=value;$('working').hidden=!value;$('comparison').setAttribute('aria-busy',String(value));$('touchup').disabled=!result||value;for(const b of $('versions').children)b.disabled=value||!variants[Number(b.dataset.index)];updateExport();}

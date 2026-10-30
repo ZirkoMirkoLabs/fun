@@ -11,10 +11,18 @@ function compare(r,path){const e=decode(path);assert.equal(r.width,e.w,path);ass
 assert.equal(readFileSync('projects/pixelsnap/presets.json','utf8'),readFileSync('desktop/pixelsnap/pixelsnap/presets.json','utf8'));
 for(const f of fixtures){const a=decode(f.source),r=processImage(a.data,a.w,a.h,f.options),meta=JSON.parse(readFileSync(join(root,'expected',f.stem+'_info.json')));const bad=compare(r,join(root,'expected',f.stem+'_native.png'));
  const grid=['x','y'].every(k=>Math.abs(r.grid[k].cell-meta.grid[k].cell)<.01&&Math.abs(r.grid[k].offset-meta.grid[k].offset)<.02&&r.grid[k].method===meta.grid[k].method);
- const checks=variants(a.data,a.w,a.h).map(v=>({preset:v.preset,bad:compare(v,join(root,'variants',f.stem,v.preset+'.png'))}));
- report.push({sample:f.stem,bad,grid,checks});console.log(`${f.stem}: snap ${bad} differing channels, grid ${grid}, variants ${checks.filter(c=>!c.bad).length}/8 exact`);
+ assert.deepEqual(r.warnings,meta.warnings,`${f.stem} snap notices`);
+ const checks=[['',{}],['-sticky',{transparent:true,cleanup:true,dither:true,drift:false,edgeCleanup:'off'}]].flatMap(([suffix,options])=>variants(a.data,a.w,a.h,null,options).map(v=>{
+  const expected=JSON.parse(readFileSync(join(root,'variants',f.stem,v.preset+suffix+'.json')));
+  assert.deepEqual(v.palette,expected.palette,`${f.stem} ${v.preset}${suffix} palette`);
+  assert.deepEqual(v.meta.warnings,expected.warnings,`${f.stem} ${v.preset}${suffix} notices`);
+  assert.equal(v.meta.background_removed,expected.background_removed);
+  assert.equal(v.meta.source_had_transparency,expected.source_had_transparency);
+  return {preset:v.preset+suffix,bad:compare(v,join(root,'variants',f.stem,v.preset+suffix+'.png'))};
+ }));
+ report.push({sample:f.stem,bad,grid,checks});console.log(`${f.stem}: snap ${bad} differing channels, grid ${grid}, variants ${checks.filter(c=>!c.bad).length}/16 exact`);
  if(bad)writeFileSync(join(root,f.stem+'-js.rgba'),r.data);
 }
 writeFileSync(join(root,'parity.json'),JSON.stringify(report,null,2)+'\n');
 assert.ok(report.every(r=>!r.bad&&r.grid&&r.checks.every(c=>!c.bad)),'Pixel parity failed');
-console.log(`${report.length} snaps + ${report.length*8} variants: 100% exact RGBA parity`);
+console.log(`${report.length} snaps + ${report.length*16} variants: 100% exact RGBA parity`);

@@ -20,25 +20,30 @@ def get_preset(name):
     raise ValueError(f'Unknown preset: {name}')
 
 
-def variants(image, presets=None):
+def variants(image, presets=None, options=None):
     """Detect once; cache sampling by grid and reuse it across all option bundles.
 
     Returns [{preset, label, native (Pillow RGBA), width, height, palette, meta}].
     No filesystem writes. Target presets resample the source without detection.
+    Base options are an Options instance or mapping; presets override only their keys.
     """
     from .core import Options, prepare_image, process_image
     selected = [get_preset(name) for name in presets] if presets is not None else PRESETS
     if not selected:
         return []
-    recovered = prepare_image(image, Options())
-    cache = {None: recovered}
+    base = asdict(options) if isinstance(options, Options) else dict(options or {})
+    Options(**base).validate()
+    faithful_options = Options(**{**base, **get_preset('faithful')['options']})
+    recovered = prepare_image(image, faithful_options)
+    # All current presets use smart/strong, which share the same sampling pass.
+    cache = {faithful_options.target_size: recovered}
     results = []
     faithful = None
     for preset in selected:
         if preset['name'] in ('faithful', 'clean') and faithful is None:
-            faithful = process_image(None, Options(**get_preset('faithful')['options']),
+            faithful = process_image(None, faithful_options,
                                      artifacts=('native',), prepared=recovered)
-        values = dict(preset['options'])
+        values = {**base, **preset['options']}
         if preset['name'] == 'clean':
             values['colors'] = max(2, min(values['colors'], len(faithful.metadata['palette'])))
         options = Options(**values)

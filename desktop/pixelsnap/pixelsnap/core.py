@@ -532,7 +532,7 @@ def remove_background(rgba):
     border = np.concatenate([rgba[0], rgba[-1], rgba[:, 0], rgba[:, -1]])
     border = border[border[:, 3] > 0, :3]
     if not len(border):
-        return out, "Existing transparency preserved."
+        return out, "Transparent border preserved."
     quant, counts = np.unique(border // 12, axis=0, return_counts=True)
     winning = quant[np.argmax(counts)]
     close = np.max(np.abs(border.astype(int) // 12 - winning.astype(int)), axis=1) <= 1
@@ -548,7 +548,7 @@ def remove_background(rgba):
     seed[0], seed[-1], seed[:, 0], seed[:, -1] = mask[0], mask[-1], mask[:, 0], mask[:, -1]
     outside = binary_propagation(seed, mask=mask)
     out[outside] = 0
-    return out, f"Removed {int(outside.sum())} border-connected background pixels."
+    return out, "Background removed."
 
 
 def clean_orphans(rgba):
@@ -603,10 +603,12 @@ def prepare_image(source, options=None):
         if not fully_manual:
             profiles = edge_profiles(rgba)
         grid = detect_grid(original, options.cell, options.cell_y, options.offset_x, options.offset_y, profiles=profiles, _rgba=rgba)
+    background_message = None
     if options.transparent:
-        rgba, _ = remove_background(rgba)
+        rgba, background_message = remove_background(rgba)
     sampled, positions = sample_cells(rgba, grid, options.drift, profiles=profiles, edge_cleanup=options.edge_cleanup)
-    positions['background_removed'] = 'checkerboard' if checker else ('flat' if options.transparent else None)
+    positions['background_removed'] = 'checkerboard' if checker else ('flat' if background_message == 'Background removed.' else None)
+    positions['source_had_transparency'] = bool(np.any(np.asarray(original)[..., 3] < 255))
     return original, grid, sampled, positions
 
 
@@ -620,16 +622,21 @@ def process_image(source, options=None, *, artifacts=('native', 'upscaled', 'com
     original, grid, sampled, positions = prepared if prepared is not None else prepare_image(source, options)
     warnings = []
     if positions.get('background_removed') == 'checkerboard':
-        warnings.append('Painted checkerboard background converted to real transparency.')
+        warnings.append('Painted checkerboard removed.')
+    elif positions.get('background_removed') == 'flat':
+        warnings.append('Background removed.')
     if grid.x.method == grid.y.method == 'fallback':
         warnings.append('Fallback: no consistent grid found. Detail-adaptive area sampling; missing detail cannot be recovered.')
     if grid.x.method == 'regional':
         warnings.append('Mixed-scale detail: finer sampling protects aligned HUD text; this is an approximation.')
     if min(grid.x.confidence, grid.y.confidence) < .25 and (grid.x.method != "native" or grid.y.method != "native"):
-        warnings.append("Weak or inconsistent grid. Try a manual cell size and inspect fine details.")
+        warnings.append('Weak or inconsistent grid: this is an approximation. Try a target size or manual grid.')
     if options.transparent:
         sampled, message = remove_background(sampled)
-        warnings.append(message)
+        if not positions.get('background_removed'):
+            if message == 'Transparent border preserved.' and positions.get('source_had_transparency'):
+                message = 'Image already had transparency.'
+            warnings.append(message)
     sampled, palette = reduce_palette(sampled, options.colors, options.palette, options.custom_palette, options.dither)
     if options.edge_cleanup != "off" and not options.dither:
         from .edges import clean_edges

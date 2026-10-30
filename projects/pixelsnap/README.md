@@ -62,3 +62,9 @@ Without a consistent grid, image detail chooses a 128, 160 or 192 px long side. 
 The browser picker includes eight owner-generated examples and the 5.5x blurry sprite. All ten new originals are in `samples/v3/` in the Python distribution. Transparent sprite examples enable Remove flat background; the eight existing version presets remain stable.
 
 Validation (2026-10-30): 104 Python tests, 20 full-image comparisons and 160 preset comparisons with 100% exact RGBA Python/JS parity. Recreate fixtures with `python pixelsnap/tools/validate_v3.py G:/tmp/pixelsnap-v3` from the parent workspace; from `fun`, run `node tools/test_pixelsnap_v3.mjs G:/tmp/pixelsnap-v3`. The separate v2 exporter/sampling suite accepts that same fixture directory as its first argument.
+
+## V3.1 option and palette consistency
+
+Version generation accepts base options (`variants(image, presets=None, options=None)` in Python; `variants(data, width, height, names, baseOptions)` in JavaScript). Each preset overrides only its own keys, with one recovered-grid detection shared across versions. The browser rebuilds tiles when sticky toggles change and labels the current output with its actual nontransparent RGB palette count. Notices distinguish background removal, painted checkerboard removal and source transparency.
+
+The v3 parity scripts also compare 160 variants with transparency, cleanup and dithering enabled. Run `node tools/test_pixelsnap_v31.mjs` for the toggle/palette regressions and `python tools/test_pixelsnap_v31_ui.py --output G:/tmp/pixelsnap-v31/live` for all nine examples at 1440/390 px, including thumbnails, toggle changes, selected PNG bytes and palette counts.

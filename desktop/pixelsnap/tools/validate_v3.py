@@ -12,4 +12,7 @@ for row in rows:
  for v in variants(row['source']):
   v['native'].save(dest/(v['preset']+'.png'))
   (dest/(v['preset']+'.json')).write_text(json.dumps(v['meta']))
+ for v in variants(row['source'], options=dict(transparent=True, cleanup=True, dither=True, drift=False, edge_cleanup='off')):
+  v['native'].save(dest/(v['preset']+'-sticky.png'))
+  (dest/(v['preset']+'-sticky.json')).write_text(json.dumps(v['meta']))
  print(row['stem'],flush=True)

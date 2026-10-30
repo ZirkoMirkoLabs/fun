@@ -1,0 +1,1 @@
+var e=new URLSearchParams(location.search).has(`cine`);if(e){document.documentElement.classList.add(`cine-mode`),window.READY=!1;let e=44017;Math.random=()=>(e=Math.imul(e,1664525)+1013904223|0,(e>>>0)/4294967296)}export{e as t};

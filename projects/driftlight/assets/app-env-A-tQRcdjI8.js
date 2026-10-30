@@ -1,0 +1,4 @@
+var e=new WeakSet,t={duration:8,loop:!1,palette:`Moonlight`,swarm:!1,landmarks:!1,showHero:!1,timeOffset:106,bloom:.65,visibility:{"Rare passing manta":!0,get"Luminous trench / fifth discovery"(){let t=window.cine?.scene?.getObjectByName(`Snell window / total internal reflection`);if(t&&!e.has(t.material)){let n=t.material.clone();n.fragmentShader=n.fragmentShader.replace(`gl_FragColor=vec4(color,1.);`,`
+        float paleLight=smoothstep(.4,.9,ray.y)*(.8+.2*wave((eye+ray*dist).xz));
+        gl_FragColor=vec4(color+vec3(.12,.19,.20)*paleLight,1.);
+      `),t.material=n,e.add(n)}return!0}},sample(e){return{camera:{position:[-9+.12*e/8,-15.25+.06*e/8,-57.5+.35*e/8],target:[-9,0,-46],fov:100-2*e/8}}},pulses:[{t:6,strength:.65,position:[-9,-15,-55.5]}],captions:[{start:0,end:5.9,text:`**look up.**`},{start:6,end:8,text:`driftlight`,className:`endcard`}]};export{t};

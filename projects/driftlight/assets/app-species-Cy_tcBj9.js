@@ -1,0 +1,1 @@
+var e=[{id:`moon`,name:`Moon jelly`,w:[1,0,0]},{id:`comb`,name:`Comb jelly`,w:[0,1,0]},{id:`mane`,name:`Lion's mane`,w:[0,0,1]}],t=t=>Math.max(0,e.findIndex(e=>e.id===t));export{t as n,e as t};

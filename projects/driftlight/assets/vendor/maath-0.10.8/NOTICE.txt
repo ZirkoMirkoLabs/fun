@@ -1,0 +1,4 @@
+maath 0.10.8
+License declared in upstream package.json: MIT
+Source: https://registry.npmjs.org/maath/-/maath-0.10.8.tgz
+The published npm package omits a standalone license file.

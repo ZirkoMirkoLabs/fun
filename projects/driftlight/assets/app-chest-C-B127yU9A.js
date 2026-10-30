@@ -1,0 +1,1 @@
+import{t as e}from"/fun/projects/driftlight/assets/app-chest-A-BfhuiJs1.js";var t={...e,captions:[]};export{t};

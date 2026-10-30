@@ -1,0 +1,1 @@
+import{t as e}from"/fun/projects/driftlight/assets/app-jelly-A-BjsLFatf.js";var t={...e,captions:[]};export{t};

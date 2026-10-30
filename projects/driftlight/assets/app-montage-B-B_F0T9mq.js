@@ -1,0 +1,1 @@
+import{n as e,r as t,t as n}from"/fun/projects/driftlight/assets/app-montage-core-sU70FJSP.js";var r={...e,sample:e=>t(e,`B`),captions:[...n,{start:0,end:3,text:`move the mouse.`},{start:3,end:6,text:`hold to swim.`},{start:6,end:9,text:`find the maker's mark.`}]};export{r as t};

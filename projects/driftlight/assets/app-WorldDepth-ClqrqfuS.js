@@ -1,0 +1,1 @@
+function e(e,t){let n=Math.max(0,Math.min(1,(-t-34)/22)),r=Math.exp(-(((e+9)/7.8)**6));return 13.5*n*n*(3-2*n)*r}function t(t,n){return-2.2-e(t,n)}export{e as n,t};

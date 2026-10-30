@@ -1,0 +1,1 @@
+var e={id:`makers-mark`,label:`the maker's mark`,position:[-11.75,-7.5,-52],approach:[-8.8,-8.6,-50],radius:4.8};export{e as t};

@@ -1,0 +1,1 @@
+function e(e,t,n,r=.3){let i=(t,i)=>{let a=e.x+n.x-t.x,o=e.y+n.y-t.y,s=e.z+n.z-t.z,c=Math.hypot(a,o,s),l=i+r;if(c>=l+.7)return;c<1e-4&&(a=1,o=s=0);let u=c<1e-4?1:c,d=Math.max(0,1-(c-l)/.7),f=c<l?l-c:.7*d*d*(1-d);e.x+=a/u*f,e.y+=o/u*f,e.z+=s/u*f};i(t.pos,t.scale*1.35);for(let e of t.bellObstacles||[])i(e.center,e.radius)}export{e as t};

@@ -1,0 +1,3 @@
+import{n as e,r as t,t as n}from"/fun/projects/driftlight/assets/app-montage-core-sU70FJSP.js";if(typeof document<`u`&&/^montage_A(?:\.js)?$/.test(new URLSearchParams(location.search).get(`cine`)||``)){let e=new CSSStyleSheet;e.replaceSync(`
+ html[data-montage] .cine-caption.subline{top:15.5vw;font-size:5.6vw;line-height:1.15;letter-spacing:-.035em}
+ `),document.adoptedStyleSheets=[...document.adoptedStyleSheets,e]}var r={...e,sample:e=>t(e,`A`),captions:[...n,{start:0,end:4.5,text:`i built an ocean you can **swim** in.`},{start:0,end:4.5,text:`(it runs in your browser)`,className:`subline`}]};export{r as t};

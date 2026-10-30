@@ -7,9 +7,11 @@ import io
 import json
 import zipfile
 import argparse
+from urllib.parse import urlsplit
 
 p=argparse.ArgumentParser();p.add_argument('--url',default='http://127.0.0.1:8843/fun/projects/pixelsnap/');p.add_argument('--output',default='G:/tmp/pixelsnap-effects-validation/browser');args=p.parse_args()
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
+origin=urlsplit(args.url).scheme+'://'+urlsplit(args.url).netloc
 root=Path(__file__).resolve().parents[1]
 recipe=root/'desktop/pixelsnap/effects-example.json'
 bad=out/'bad.json';bad.write_text('{"version":1,"name":"bad","layers":[{"effect":"../../evil.mjs"}]}')
@@ -149,7 +151,7 @@ with sync_playwright() as p:
         assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
         assert not errors,errors
         assert not page.evaluate('window.cspErrors')
-        assert all(u.startswith(('http://127.0.0.1:8843/','blob:')) for u in requests)
+        assert all(u.startswith((origin+'/','blob:')) for u in requests)
         reports.append({'viewport':[width,height],'effects':27,'gif_frames':30,'native':list(original.size),'exact_png_sheet_apply_undo_redo':True,'recipe_import_rejection':True,'keyboard':True,'auto_preview':True,'one_click_surprise':True,'undo_apply':True,'csp_errors':0,'console_errors':errors,'third_party_requests':0})
         context.close()
     # Motion allowed: autoplay starts in view, Pause sticks through effect changes, version change keeps the effect.

@@ -17,7 +17,7 @@ uvx --python 3.12 --from ".[web]" pixelsnap serve
 uvx --python 3.12 --from . pixelsnap snap "input.png" -o "out" --json
 ```
 
-Replace `.` with an absolute checkout path or a Git URL containing this package; no published PyPI distribution is assumed. To install persistently: `uv tool install --python 3.12 ".[web]"`, or `python -m pip install ".[web]"` in your own virtual environment. Core installs need only NumPy, Pillow and SciPy. Flask/Waitress are in `[web]`; the official MCP SDK is in `[mcp]`.
+Replace `.` with an absolute checkout path or a Git URL containing this package; no published PyPI distribution is assumed. To install persistently: `uv tool install --python 3.12 ".[web]"`, or `python -m pip install ".[web]"` in your own virtual environment. Core installs include NumPy, Pillow, SciPy and the official MCP SDK. Flask/Waitress are in `[web]`; `[mcp]` remains a compatibility extra.
 
 First setup downloads dependencies. Subsequent unchanged cached launches work offline. Network/proxy/certificate errors are printed and return code 3; rerun after correcting them. The app binds only to `127.0.0.1`. It prefers port 18765, automatically chooses a free port if occupied, and opens the actual URL after a successful health check. `run.bat --no-browser --port 0 --json` prints a ready event with the selected URL. An explicit occupied fixed port fails accurately. Keep the console open; Ctrl+C stops the server.
 
@@ -69,22 +69,97 @@ paths = save_result(result, "out", "sprite")
 
 Unsigned 16-bit images are rounded over the full 0..65535 range; mode `I` follows that same range policy. Float mode `F` requires finite 0..1 values. Out-of-range numeric images are rejected. Alpha is reduced to binary coverage; invisible RGB cannot influence visible colours. Input limit: 20 MP and 8192 pixels per side; native output: 1 MP; requested upscaled output: 32 MP. Large inputs still need several hundred MB of RAM. Results are deterministic within the same numerical-library environment; bit-identical results across library versions are not promised.
 
+## PixelSnap v2: versions, edge cleanup and exports
+
+`edge_cleanup="smart"` is the default. `off` reproduces the v1 sampling/cleanup path; `strong` is more aggressive. Smart uses alpha-weighted, centre-biased two-cluster sampling on mixed cells, then suppresses low-population OKLab transition colours with local endpoint support. Flat areas and local extrema (eyes/highlights/stars) are protected. Strong and the opt-in orphan cleanup can remove intentional small details; review Clean before using it. Dither intentionally creates texture and bypasses transition cleanup.
+
+The detector and bilinear geometry inversion are unchanged. A transition pixel is a minority palette colour near the OKLab segment of two more populous neighbouring colours, outside a flat interior. Smart uses 0.008 OKLab residual tolerance, a 2:1 population ratio and a 3-neighbour flat guard. In images where two endpoint colours cover at least 90% of pixels, small interpolation clusters need only one endpoint locally. The metric is diagnostic, not a claim that every remaining artefact is detectable.
+
+`pixelsnap/presets.json` is the single preset definition: Faithful, Clean, Icon 32, Sprite 64, Retro, Game Boy, 1-bit, Poster 128. The browser imports this JSON directly from the public Python package. The public package is a byte-for-byte distribution copy of the canonical package.
+
+```python
+from pixelsnap import variants
+versions = variants("input.png", presets=["faithful", "clean", "Icon 32"])
+# Each item: preset, label, native (Pillow RGBA), width, height, palette, meta.
+# Grid detection happens once; target-size variants resample without redetection.
+```
+
+```sh
+pixelsnap snap input.png -o out --preset clean --edge-cleanup smart --json
+pixelsnap snap input.png -o out --svg --palette-files
+pixelsnap snap input.png -o out --pack out/sprite.zip
+pixelsnap snap input.png -o out --pack
+```
+
+`--pack` writes a folder (`out/input_pack` by default) or a `.zip`: native PNG, aspect-preserving nearest-neighbour fits at long-side 16/32/64/128, an exact 8x preview, run-length SVG, HEX and GPL palettes. Upscaling fits can have unequal pixel widths when dimensions do not divide evenly; the native PNG and 8x preview always preserve exact grid geometry. Existing files are refused unless `--overwrite` is supplied. Python helpers live in `pixelsnap.exports` (`svg`, `palette_hex`, `palette_gpl`, `nearest_fit`, `pack_files`, `save_pack`).
+
 ## MCP stdio
 
-Install `python -m pip install ".[mcp]"`. The adapter uses the [official Python MCP SDK's maintained v1 API](https://github.com/modelcontextprotocol/python-sdk/tree/v1.x), pinned below v2 for Python 3.10 compatibility. A minimal client configuration (replace paths):
+After the v2 integration is published to the public repository, launch directly with one line:
+
+```sh
+uvx --from "git+https://github.com/ZirkoMirkoLabs/fun#subdirectory=desktop/pixelsnap" pixelsnap mcp
+```
+
+This requires uv and Git. The official `mcp>=1.12,<2` SDK is installed automatically; no extras or API keys are required. The v1 SDK is deliberately pinned for Python 3.10 compatibility. The local equivalent used for verification is:
+
+```sh
+uvx --from "G:/ClaudeOctober/XClaude/fun/desktop/pixelsnap" pixelsnap mcp --input-root "G:/ClaudeOctober/XClaude/pixelsnap/samples/input" --output-root "G:/tmp/pixelsnap-v2/mcp"
+```
+
+Choose real input/output directories in the examples below. `uvx` must be in the client's PATH; otherwise use its absolute executable path. The first isolated Windows launch can spend more than 120 seconds installing and importing dependencies; allow a longer initial startup timeout. If a client times out, run the same uvx command with `--version` instead of `mcp` once, then retry. Cached stdio launches were verified.
+
+### Claude Code
+
+```sh
+claude mcp add --transport stdio pixelsnap -- uvx --from "git+https://github.com/ZirkoMirkoLabs/fun#subdirectory=desktop/pixelsnap" pixelsnap mcp --input-root "G:/art" --output-root "G:/snapped"
+```
+
+See [Claude Code's local stdio configuration](https://code.claude.com/docs/en/mcp).
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json` (Settings > Developer > Edit Config):
 
 ```json
 {
   "mcpServers": {
     "pixelsnap": {
-      "command": "G:/ClaudeOctober/XClaude/pixelsnap/.venv/Scripts/python.exe",
-      "args": ["-m", "pixelsnap", "mcp", "--input-root", "G:/art", "--output-root", "G:/snapped"]
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/ZirkoMirkoLabs/fun#subdirectory=desktop/pixelsnap", "pixelsnap", "mcp", "--input-root", "G:/art", "--output-root", "G:/snapped"]
     }
   }
 }
 ```
 
-For macOS/Linux use your installed `pixelsnap` executable as `command` and omit `-m`, `pixelsnap` from `args`. `snap_image(path, options, artifacts)` returns the same versioned JSON envelope as the CLI and saves unique output names. Relative inputs resolve inside `--input-root`; paths escaping it are rejected. `list_capabilities` reports defaults, limits and allowed roots. Defaults are current directory for input and `./out` for output. Calls are serialized, logs go to stderr, stdout is protocol-only, and there is no network listener. The standard `[web]` launcher does not install `[mcp]`; install that extra in the interpreter selected by your client.
+See the [official local MCP setup guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
+
+### Codex
+
+Add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.pixelsnap]
+command = "uvx"
+args = ["--from", "git+https://github.com/ZirkoMirkoLabs/fun#subdirectory=desktop/pixelsnap", "pixelsnap", "mcp", "--input-root", "G:/art", "--output-root", "G:/snapped"]
+startup_timeout_sec = 300
+tool_timeout_sec = 120
+```
+
+See [official OpenAI MCP configuration](https://developers.openai.com/codex/mcp).
+
+### Cursor
+
+Put the same `mcpServers` JSON shown for Claude Desktop in `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global). See [Cursor's MCP configuration](https://prod.cursor.com/help/customization/mcp).
+
+### Tools and path policy
+
+- `snap_image(path, options?, artifacts?, include_image=false)` accepts `preset` and `edge_cleanup` in options. Explicit options override the preset. It returns unique output paths and metadata; `include_image=true` adds native PNG MCP image content when the native artifact is selected.
+- `snap_variants(path, presets?)` detects once and exports selected versions (all eight by default), with palette, metadata and timings.
+- `batch_snap(path, options?, recursive=false)` accepts a folder or glob and isolates per-file failures.
+- `list_presets()` and `list_palettes()` expose supported bundles and palette colours. `list_capabilities()` reports configured roots and limits.
+
+Relative inputs resolve inside `--input-root`; paths escaping it are rejected, including resolved symlinks. Outputs have unique filenames. Defaults are current directory for input and `./out` for output. Calls are serialized, logs go to stderr, stdout is protocol-only, and there is no network listener. Image processing is local; uv may download dependencies on first setup.
 
 ## HTTP API and preview cache
 
@@ -125,4 +200,4 @@ python -m PyInstaller --noconfirm PixelSnap.spec
 .\dist\PixelSnap\PixelSnap.exe snap input.png -o out --json
 ```
 
-Distribute the entire `dist/PixelSnap` folder. With no arguments the executable opens the local UI; `snap` runs the CLI. The console is intentional so errors and Ctrl+C remain available. Static assets and numerical native libraries are bundled; the optional MCP SDK is excluded (use the Python installation for MCP). Build on the target OS; this is not a signed installer or macOS app. See `samples/ACCEPTANCE.md` for this run's actual build and validation status.
+Distribute the entire `dist/PixelSnap` folder. With no arguments the executable opens the local UI; `snap` runs the CLI. The console is intentional so errors and Ctrl+C remain available. Static assets and numerical native libraries are bundled; the MCP SDK is excluded (use the Python installation for MCP). Build on the target OS; this is not a signed installer or macOS app. See `samples/ACCEPTANCE.md` for this run's actual build and validation status.

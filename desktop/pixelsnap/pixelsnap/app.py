@@ -99,7 +99,7 @@ def create_app():
                 artifacts = ('native', 'upscaled') if deferred else ('native', 'upscaled', 'comparison')
             payload = request.files['image'].read()
             digest = hashlib.sha256(payload).hexdigest()
-            sampling = tuple(getattr(opts, name) for name in ('cell', 'cell_y', 'offset_x', 'offset_y', 'target_size', 'drift'))
+            sampling = tuple(getattr(opts, name) for name in ('cell', 'cell_y', 'offset_x', 'offset_y', 'target_size', 'drift', 'edge_cleanup'))
             key = (digest, sampling)
             hit = cache.get('key') == key
             if not hit:

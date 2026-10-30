@@ -13,6 +13,11 @@ ARTIFACTS = ('native', 'upscaled', 'comparison')
 def options_from_mapping(values, *, form=False):
     if not isinstance(values, dict):
         raise ValueError('Options must be an object.')
+    values = dict(values)
+    preset = values.pop("preset", None)
+    if preset is not None:
+        from .versions import get_preset
+        values = {**get_preset(preset)["options"], **values}
     names = {f.name for f in fields(Options)}
     unknown = set(values) - names
     if unknown:
@@ -23,7 +28,7 @@ def options_from_mapping(values, *, form=False):
             if value == '' and name not in ('custom_palette', 'palette'):
                 del parsed[name]
                 continue
-            if name in ('transparent', 'cleanup', 'drift', 'dither'):
+            if name in ('transparent', 'cleanup', 'drift', 'dither') and isinstance(value, str):
                 value = value.lower()
                 if value not in ('true', 'false', '1', '0', 'on', 'off'):
                     raise ValueError(f'{name} must be true or false.')

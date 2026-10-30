@@ -15,9 +15,17 @@ uvx --python 3.12 --from ".[web]" pixelsnap serve
 uvx --python 3.12 --from . pixelsnap snap input.png -o out --json
 ```
 
+## V2 workflow
+
+Eight engine-generated versions, Off/Smart/Strong edge cleanup, zoom/pan and reversible native-pixel touch-ups. PNG exports default to 8x nearest-neighbour; native remains selectable. SVG, transparent PNG, a nine-file ZIP pack, GPL/HEX palettes and clipboard images include edits. Clean uses at most 16 colours, capped at the Faithful variant colour count.
+
+The browser imports its local `presets.json`. Keep it byte-identical to `desktop/pixelsnap/pixelsnap/presets.json`; the v2 parity test checks this. The UI directly uses worker `presets`, `snap` and `variants` messages and the shared `export-core.mjs` exporters.
+
+V2 checks: `node tools/test_pixelsnap_v2.mjs` (80 Python/JS variant comparisons), and `python tools/test_pixelsnap_ui.py --url http://127.0.0.1:8826/fun/projects/pixelsnap/ --output G:/tmp/pixelsnap-v2/final` (desktop/mobile flows, independent export validation). Generate expected fixtures first with `python ../pixelsnap/tools/validate_v2.py`.
+
 ## Implementation and limits
 
-`math.mjs`, `grid.mjs`, `core.mjs` and `palettes.mjs` port the existing Python algorithm: spectral edge/curvature evidence, fractional per-axis pitch and phase, drift correction, nine alpha-aware median samples, bilinear unmixing, deterministic Oklab palette fitting, Bayer dithering, border-connected background removal and synchronous eight-neighbour cleanup.
+`math.mjs`, `grid.mjs`, `core.mjs` and `palettes.mjs` port the existing Python algorithm: spectral edge/curvature evidence, fractional per-axis pitch and phase, drift correction, nine alpha-aware weighted-cluster samples, bilinear unmixing, deterministic Oklab palette fitting, Bayer dithering, border-connected background removal and synchronous eight-neighbour cleanup.
 
 UI: mobile upload/drop, before/after slider, all eight preset palettes, custom hex/GPL import, colour ceiling, manual grid/phase, 16–128 px target grids and nearest-neighbour 1–32× PNG export.
 

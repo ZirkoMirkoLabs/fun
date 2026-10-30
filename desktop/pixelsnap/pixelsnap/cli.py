@@ -36,6 +36,11 @@ def _parser():
     for name in ('cell', 'cell-y', 'offset-x', 'offset-y'):
         p.add_argument('--' + name, type=float)
     p.add_argument('--colors', type=int)
+    p.add_argument('--preset', help='Named version, e.g. faithful, clean, icon32, retro')
+    p.add_argument('--edge-cleanup', choices=['off', 'smart', 'strong'], default='smart')
+    p.add_argument('--pack', nargs='?', const='', help='Write a folder or .zip (default: OUTPUT/STEM_pack)')
+    p.add_argument('--svg', action='store_true', help='Also export native SVG')
+    p.add_argument('--palette-files', action='store_true', help='Also export HEX and GPL palettes')
     p.add_argument('--palette', choices=['auto', 'custom', 'pico8', 'gameboy', *EXTRA_PALETTES], default='auto')
     p.add_argument('--target-size', type=int)
     p.add_argument('--fit', type=int)
@@ -144,7 +149,18 @@ def main(argv=None):
         options = Options(cell=args.cell, cell_y=args.cell_y, offset_x=args.offset_x, offset_y=args.offset_y,
                           colors=args.colors, palette='custom' if palette_text is not None else args.palette,
                           transparent=args.transparent, cleanup=args.cleanup, scale=args.scale, drift=not args.no_drift,
-                          target_size=args.target_size, fit=args.fit, custom_palette=palette_text, dither=args.dither)
+                          target_size=args.target_size, fit=args.fit, custom_palette=palette_text, dither=args.dither, edge_cleanup=args.edge_cleanup)
+        if args.preset:
+            from dataclasses import asdict
+            from .versions import get_preset
+            overrides = asdict(options)
+            flags = {token.split('=')[0] for token in argv if token.startswith('--')}
+            for key, value in get_preset(args.preset)['options'].items():
+                if '--'+key.replace('_', '-') not in flags:
+                    overrides[key] = value
+            if palette_text is not None:
+                overrides['palette'] = 'custom'
+            options = Options(**overrides)
         options.validate()
         artifacts = validate_artifacts(args.artifacts or ('native,upscaled,comparison' if legacy and args.output != '-' else 'native'))
         paths = _files(args.input, args.recursive, args.output)
@@ -154,6 +170,10 @@ def main(argv=None):
             raise ValueError('Binary stdout requires one input, native only, and no --json/--jsonl.')
         if args.metadata_file and not (len(paths) == 1 and (paths[0] == '-' or args.output == '-')):
             raise ValueError('--metadata-file is for single-image stdin/stdout mode; directory exports include an info sidecar.')
+        if (args.pack is not None or args.svg or args.palette_files) and ('-' in paths or args.output == '-'):
+            raise ValueError('Pack/SVG/palette exports require file inputs and an output directory.')
+        if args.pack and len(paths) != 1:
+            raise ValueError('An explicit --pack destination requires exactly one input.')
         stems = _stems(paths)
         _protect_sources(paths, stems, args.output, artifacts, args.metadata_file)
         records = []
@@ -193,6 +213,39 @@ def main(argv=None):
                     record = failure(path, error_code(exc), str(exc))
             else:
                 record = run_file(path, args.output, options, artifacts=artifacts, stem=stem, overwrite=args.overwrite)
+            if record['status'] == 'ok' and (args.pack is not None or args.svg or args.palette_files):
+                from .core import Result
+                from .exports import save_pack, svg, palette_hex, palette_gpl
+                from PIL import Image
+                from .interface import error_code
+                try:
+                    # Export the already computed native image, never run recovery twice.
+                    native_path = record['outputs'].get('native')
+                    if native_path is None:
+                        raise ValueError('Pack/SVG/palette exports require the native artifact.')
+                    with Image.open(native_path) as image:
+                        result_image = Result(image.convert('RGBA'), None, None, record['metadata'])
+                    if args.pack is not None:
+                        destination = args.pack or str(Path(args.output)/(stem+'_pack'))
+                        from .exports import pack_files
+                        pack_path = Path(destination).resolve()
+                        targets = [pack_path] if pack_path.suffix.lower() == '.zip' else [pack_path/name for name in pack_files(result_image)]
+                        if set(targets) & {Path(p).resolve() for p in paths}:
+                            raise ValueError('Pack destination would overwrite an input.')
+                        record['outputs']['pack'] = save_pack(result_image, destination, overwrite=args.overwrite)
+                    extras = {}
+                    if args.svg:
+                        extras['svg'] = svg(result_image.native)
+                    if args.palette_files:
+                        extras['hex'] = palette_hex(record['metadata']['palette'])
+                        extras['gpl'] = palette_gpl(record['metadata']['palette'])
+                    for extension, content in extras.items():
+                        destination = Path(args.output)/(stem+'.'+extension)
+                        with destination.open('w' if args.overwrite else 'x', encoding='utf-8', newline='\n') as output_file:
+                            output_file.write(content)
+                        record['outputs'][extension] = str(destination.resolve())
+                except Exception as exc:
+                    record = failure(path, error_code(exc, writing=True), str(exc))
             records.append(record)
             if args.jsonl:
                 print(json.dumps(dict(type='result', schema_version=1, app_version=__version__, **record), allow_nan=False), flush=True)

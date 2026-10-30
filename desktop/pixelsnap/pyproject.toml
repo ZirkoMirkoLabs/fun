@@ -9,7 +9,7 @@ description = "Recover a true pixel grid from imperfect raster art, locally."
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.26,<3", "Pillow>=10.4,<13", "scipy>=1.12,<2"]
+dependencies = ["numpy>=1.26,<3", "Pillow>=10.4,<13", "scipy>=1.12,<2", "mcp>=1.12,<2"]
 
 [project.optional-dependencies]
 web = ["Flask>=3.0,<4", "waitress>=3.0,<4"]
@@ -27,4 +27,4 @@ version = {attr = "pixelsnap.__version__"}
 include = ["pixelsnap*"]
 
 [tool.setuptools.package-data]
-pixelsnap = ["static/*"]
+pixelsnap = ["static/*", "presets.json"]

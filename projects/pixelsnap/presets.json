@@ -1,0 +1,10 @@
+[
+  {"name":"faithful","label":"Faithful","description":"Recover the original grid with automatic colours and smart edge cleanup.","options":{"palette":"auto","edge_cleanup":"smart"}},
+  {"name":"clean","label":"Clean","description":"Strong edge cleanup, at most 16 colours, and isolated-pixel cleanup.","options":{"palette":"auto","colors":16,"edge_cleanup":"strong","cleanup":true}},
+  {"name":"icon32","label":"Icon 32","description":"Fit the source to a 32-pixel grid with smart edge cleanup.","options":{"target_size":32,"edge_cleanup":"smart"}},
+  {"name":"sprite64","label":"Sprite 64","description":"Fit the source to a 64-pixel grid with smart edge cleanup.","options":{"target_size":64,"edge_cleanup":"smart"}},
+  {"name":"retro","label":"Retro","description":"Recovered grid mapped to the PICO-8 palette.","options":{"palette":"pico8","edge_cleanup":"smart"}},
+  {"name":"gameboy","label":"Game Boy","description":"Recovered grid in the four classic Game Boy colours.","options":{"palette":"gameboy","edge_cleanup":"smart"}},
+  {"name":"1bit","label":"1-bit","description":"Recovered grid in pure black and white.","options":{"palette":"1bit","edge_cleanup":"smart"}},
+  {"name":"poster128","label":"Poster 128","description":"Fit the source to a detailed 128-pixel grid.","options":{"target_size":128,"edge_cleanup":"smart"}}
+]

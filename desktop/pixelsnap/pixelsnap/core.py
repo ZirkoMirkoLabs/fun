@@ -39,8 +39,11 @@ class Options:
     fit: int | None = None
     custom_palette: str | None = None
     dither: bool = False
+    edge_cleanup: str = "smart"
 
     def validate(self):
+        if self.edge_cleanup not in ("off", "smart", "strong"):
+            raise ValueError("edge_cleanup must be off, smart or strong.")
         if self.scale is None:
             raise ValueError('scale must be an integer.')
         if not isinstance(self.palette, str):
@@ -369,7 +372,7 @@ def _centers(length, axis, profile, drift):
     return centers, drift_applied
 
 
-def sample_cells(rgba, grid, drift=True, profiles=None):
+def sample_cells(rgba, grid, drift=True, profiles=None, edge_cleanup="smart"):
     needs_profiles = drift and any(a.method == 'spectral' and a.confidence > .18 for a in (grid.x, grid.y))
     px, py = (profiles if profiles is not None else edge_profiles(rgba)) if needs_profiles else (None, None)
     xs, dx = _centers(rgba.shape[1], grid.x, px, drift)
@@ -396,6 +399,9 @@ def sample_cells(rgba, grid, drift=True, profiles=None):
             cumulative = np.cumsum(np.take_along_axis(weights, order, axis=0), axis=0)
             index = np.argmax(cumulative >= np.maximum(weights.sum(axis=0) / 2, 1), axis=0)
             samples[..., channel] = np.take_along_axis(values, index[None], axis=0)[0]
+    if edge_cleanup != "off" and not any(a.method == "bilinear" for a in (grid.x, grid.y)):
+        from .edges import dominant_samples
+        samples = dominant_samples(probes, samples)
     # With a detected bilinear resize, even the nearest centre sample is a
     # small mixture of two logical pixels. Undo that *known sampling geometry*
     # with a diagonally dominant tridiagonal solve, before palette fitting.
@@ -585,7 +591,7 @@ def prepare_image(source, options=None):
         if not fully_manual:
             profiles = edge_profiles(rgba)
         grid = detect_grid(original, options.cell, options.cell_y, options.offset_x, options.offset_y, profiles=profiles, _rgba=rgba)
-    sampled, positions = sample_cells(rgba, grid, options.drift, profiles=profiles)
+    sampled, positions = sample_cells(rgba, grid, options.drift, profiles=profiles, edge_cleanup=options.edge_cleanup)
     return original, grid, sampled, positions
 
 
@@ -604,6 +610,11 @@ def process_image(source, options=None, *, artifacts=('native', 'upscaled', 'com
         sampled, message = remove_background(sampled)
         warnings.append(message)
     sampled, palette = reduce_palette(sampled, options.colors, options.palette, options.custom_palette, options.dither)
+    if options.edge_cleanup != "off" and not options.dither:
+        from .edges import clean_edges
+        sampled = clean_edges(sampled, options.edge_cleanup)
+        used = np.unique(sampled[..., :3][sampled[..., 3] > 0], axis=0)
+        palette = ["#" + "".join(f"{v:02x}" for v in c) for c in used]
     if options.cleanup:
         sampled = clean_orphans(sampled)
         used = np.unique(sampled[..., :3][sampled[..., 3] > 0], axis=0)

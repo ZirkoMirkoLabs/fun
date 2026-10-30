@@ -41,4 +41,4 @@ Samples are separately licensed from the MIT app. See the retained [source recor
 * `examples/sprite-55.jpg` and `sprite-725.jpg`: Belohlavek, OpenGameArt `character-sprite-walk-animation`, CC0 1.0. Deliberately enlarged/blurred JPEG variants; original sample bytes retained.
 * Poster/video: the same CC0 teapot and its actual reconstructed output.
 
-No third-party resource requests are made by the app. Site-wide Cloudflare analytics, if enabled by the owner at the edge, is governed by the site's privacy policy.
+No third-party resource requests are made by the app. The site's build sets `Cache-Control: public, no-cache, no-transform` for PixelSnap to prevent Cloudflare from injecting its analytics beacon on this page. Other pages retain their existing analytics policy.

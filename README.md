@@ -4,6 +4,7 @@ Small browser experiments by [ZirkoMirko](https://x.com/Zirkomirko). Each one is
 
 | Project | What it is | Play |
 |---|---|---|
+| [ASCII Studio](projects/ascii-studio) | Type text or drop an image and get animated ASCII art. Export PNG, TXT or video. Browser and batch command line. | [open](https://zirkomirko.com/fun/projects/ascii-studio/) |
 | [Unnamed Creature](projects/unnamed-creature) | Nobody knows what it is or why it is on a basketball. Poke it and it flinches. | [open](https://zirkomirko.com/fun/projects/unnamed-creature/) |
 | [PixelSnap](projects/pixelsnap) | Snap images to real pixel art, try 27 effects and export PNG, GIF or sprite sheets. Browser, CLI and MCP agent tools. | [open](https://zirkomirko.com/fun/projects/pixelsnap/) |
 | [Write in Stars](projects/write-in-stars) | Type anything and a galaxy of ~60k stars spells it. Drop in an image and the stars become it. | [open](https://zirkomirko.com/fun/projects/write-in-stars/) |

@@ -1,0 +1,12 @@
+{
+  "name": "ascii-studio",
+  "private": true,
+  "description": "Batch front end for ASCII Studio. Run npm install once, then node make.js.",
+  "license": "MIT",
+  "bin": {
+    "ascii-studio": "make.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

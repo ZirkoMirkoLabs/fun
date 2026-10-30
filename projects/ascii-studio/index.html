@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASCII Studio — turn text and images into living ASCII art · ZirkoMirko</title>
+<meta name="description" content="Type text or drop an image and watch it become animated ASCII art. Liquid glyphs or pixel style, with PNG, TXT and video export. Free and local to your browser.">
+<link rel="canonical" href="https://zirkomirko.com/fun/projects/ascii-studio/">
+<meta property="og:title" content="ASCII Studio — living ASCII art from anything">
+<meta property="og:description" content="Type text or drop an image. Get animated ASCII art you can export as PNG, TXT or video. Free, and your images stay on your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zirkomirko.com/fun/projects/ascii-studio/">
+<meta property="og:image" content="https://zirkomirko.com/fun/projects/ascii-studio/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zirkomirko.com/fun/projects/ascii-studio/og.jpg">
+<meta name="theme-color" content="#050506">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="./studio.mjs"></script>
+</head>
+<body>
+<div id="app">
+  <main id="stage"><canvas id="c" role="img" aria-label="Animated ASCII art output"></canvas></main>
+  <aside>
+    <header>
+      <h1>ASCII Studio <span id="fps"></span></h1>
+      <a class="toys" href="/fun/projects/">More toys ↗</a>
+    </header>
+    <p class="note">Runs in your browser. Images never leave your device.</p>
+    <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+    <section>
+      <div class="lab">Examples</div>
+      <div class="row">
+        <button data-preset="terra">Terra 6.1</button>
+        <button data-preset="smoke">Smoke</button>
+      </div>
+    </section>
+    <section>
+      <label class="lab" for="text">Type anything</label>
+      <textarea id="text" spellcheck="false" maxlength="120" placeholder="Type text…"></textarea>
+      <select id="font" aria-label="Font">
+        <option value="900 100px Arial Black, Inter, Arial, sans-serif">Heavy sans</option>
+        <option value="700 100px Georgia, 'Times New Roman', serif">Serif</option>
+        <option value="italic 700 100px Georgia, 'Times New Roman', serif">Serif italic</option>
+        <option value="700 100px Consolas, Menlo, monospace">Mono</option>
+        <option value="400 100px 'Brush Script MT', 'Segoe Script', cursive">Script</option>
+      </select>
+      <button id="pick">Upload image — or drop / paste</button>
+      <input id="file" class="hide" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+      <p class="note">PNG, JPG, WebP or GIF, up to 20 MB.</p>
+      <label class="s" id="threshWrap">Threshold<input id="thresh" type="range" min="0.05" max="0.95" step="0.01" value="0.5"><output></output></label>
+      <label class="c"><input id="invert" type="checkbox"> Invert</label>
+    </section>
+    <section>
+      <div class="lab">Style</div>
+      <div class="row">
+        <button data-mode="liquid">Liquid glyph</button>
+        <button data-mode="pixel">Pixel</button>
+      </div>
+      <label class="s">Density<input id="density" type="range" min="60" max="280" step="2"><output></output></label>
+      <label class="s">Motion<input id="speed" type="range" min="0" max="3" step="0.05"><output></output></label>
+      <label class="s">Glow<input id="glow" type="range" min="0" max="2" step="0.05"><output></output></label>
+      <div data-for="liquid" class="col">
+        <label class="s">Warp<input id="warp" type="range" min="0" max="2" step="0.02"><output></output></label>
+        <label class="s">Trails<input id="trail" type="range" min="0" max="2" step="0.02"><output></output></label>
+        <label class="s">Tendrils<input id="tend" type="range" min="0" max="2" step="0.02"><output></output></label>
+        <label class="s">Dust<input id="dust" type="range" min="0" max="2" step="0.02"><output></output></label>
+        <label class="lab" for="chars">Characters, light → dense</label>
+        <input id="chars" type="text" spellcheck="false" maxlength="40">
+      </div>
+      <div data-for="pixel" class="col">
+        <label class="s">Sway<input id="sway" type="range" min="0" max="2" step="0.02"><output></output></label>
+        <label class="s">Aura<input id="aura" type="range" min="0" max="1" step="0.02"><output></output></label>
+        <label class="lab" for="palette">Palette</label>
+        <select id="palette">
+          <option value="terra">Terra blue</option>
+          <option value="mono">Mono</option>
+          <option value="phosphor">Phosphor</option>
+          <option value="amber">Amber</option>
+          <option value="rose">Rose</option>
+          <option value="source">Image colours</option>
+          <option value="true">Exact colours</option>
+        </select>
+      </div>
+      <button id="pause" aria-pressed="false">Pause</button>
+    </section>
+    <section>
+      <div class="lab">Export</div>
+      <div class="row">
+        <button id="savePng">PNG</button>
+        <button id="saveTxt">TXT</button>
+        <button id="copyTxt">Copy</button>
+      </div>
+      <button id="rec">Record one loop</button>
+    </section>
+    <footer>
+      <a href="https://github.com/ZirkoMirkoLabs/fun/tree/main/projects/ascii-studio">GitHub ↗</a>
+      <a href="https://github.com/ZirkoMirkoLabs/fun/tree/main/desktop/ascii-studio">Batch tool ↗</a>
+      <a href="/privacy/">Privacy</a>
+    </footer>
+  </aside>
+</div>
+<noscript><p class="noscript">ASCII Studio needs JavaScript and WebGL 2 to make art on your device. The source is on <a href="https://github.com/ZirkoMirkoLabs/fun/tree/main/projects/ascii-studio">GitHub</a>.</p></noscript>
+</body>
+</html>

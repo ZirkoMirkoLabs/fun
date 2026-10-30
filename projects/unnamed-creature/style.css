@@ -1,0 +1,18 @@
+@font-face{font-family:"JetBrains Mono";src:url(jetbrains-mono.woff2) format("woff2");font-display:swap}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7d85f;color:#111}
+body{font:13px/1.4 "JetBrains Mono",ui-monospace,monospace}
+canvas{position:fixed;inset:0;display:block;touch-action:none;cursor:grab;opacity:0;transition:opacity .5s}
+canvas:active{cursor:grabbing}
+.ready canvas{opacity:1}
+.top{position:fixed;z-index:2;top:max(14px,env(safe-area-inset-top));left:16px;display:flex;align-items:center;gap:10px;pointer-events:none}
+.brand{display:block;pointer-events:auto;border-radius:6px}
+.brand img{display:block}
+.brand:focus-visible,.status a:focus-visible{outline:2px solid #111;outline-offset:3px}
+.hint{position:fixed;z-index:2;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));margin:0;text-align:center;pointer-events:none;opacity:0;transition:opacity .6s}
+.ready .hint{opacity:1}
+.ready .hint.gone{opacity:0}
+.status{position:fixed;z-index:2;inset:50% 16px auto;margin:0;text-align:center}
+.ready .status{display:none}
+.status a{color:inherit}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){canvas,.hint{transition:none}.hint{display:none}}

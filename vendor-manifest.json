@@ -443,6 +443,25 @@
       "source": "npm zustand 5.0.16/LICENSE",
       "upstream": "https://registry.npmjs.org/zustand/-/zustand-5.0.16.tgz",
       "verification": "License copied from installed package; LF normalized."
+    },
+    {
+      "path": "unnamed-creature/vendor/three-0.187.0/three-custom.min.js",
+      "package": "three",
+      "version": "0.187.0",
+      "sha256": "64745de2dde237c81737d8e96ca5dd3108a0e7e91764da59a3239ed1e4b2fd11",
+      "source": "https://registry.npmjs.org/three/-/three-0.187.0.tgz",
+      "upstream": "https://registry.npmjs.org/three/-/three-0.187.0.tgz",
+      "modifications": "Tree-shaken and minified with esbuild to the exports this toy uses, including the EffectComposer, RenderPass, GTAOPass, OutputPass and mergeVertices addons.",
+      "verification": "Built from the npm package by stage-site.cjs."
+    },
+    {
+      "path": "unnamed-creature/vendor/three-0.187.0/LICENSE.txt",
+      "package": "three",
+      "version": "0.187.0",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "source": "https://registry.npmjs.org/three/-/three-0.187.0.tgz",
+      "upstream": "https://registry.npmjs.org/three/-/three-0.187.0.tgz",
+      "verification": "Copied unchanged from the npm package."
     }
   ]
 }

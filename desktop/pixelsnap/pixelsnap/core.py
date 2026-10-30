@@ -18,6 +18,7 @@ from scipy.signal import find_peaks
 from scipy.spatial import cKDTree
 from scipy.linalg import solve_banded
 from .palettes import EXTRA_PALETTES, parse_palette
+from .refine import checker_background, hud_evidence, fallback_size, area_sample
 
 MAX_INPUT_PIXELS = 20_000_000
 MAX_OUTPUT_PIXELS = 32_000_000
@@ -342,6 +343,12 @@ def detect_grid(image, cell=None, cell_y=None, offset_x=None, offset_y=None, *, 
         if not any(a.method in ('spectral', 'bilinear') and a.confidence > .35 for a in estimates):
             size = round(max(2., max(rgba.shape[:2]) / 96), 4)
             estimates = [AxisGrid(size, float(o or 0), 0., 'fallback') for o in (offset_x, offset_y)]
+    if cell is None and cell_y is None:
+        if all(a.method == 'fallback' for a in estimates):
+            size = max(2., max(rgba.shape[:2]) / fallback_size(rgba))
+            estimates = [AxisGrid(size, float(o or 0), 0., 'fallback') for o in (offset_x, offset_y)]
+        elif hud_evidence(rgba, estimates[0].cell, estimates[1].cell):
+            estimates = [AxisGrid(a.cell / 2, float(o or 0), a.confidence, 'regional') for a, o in zip(estimates, (offset_x, offset_y))]
     return Grid(*estimates)
 
 
@@ -373,6 +380,8 @@ def _centers(length, axis, profile, drift):
 
 
 def sample_cells(rgba, grid, drift=True, profiles=None, edge_cleanup="smart"):
+    if grid.x.method == grid.y.method == 'fallback':
+        return area_sample(rgba, grid)
     needs_profiles = drift and any(a.method == 'spectral' and a.confidence > .18 for a in (grid.x, grid.y))
     px, py = (profiles if profiles is not None else edge_profiles(rgba)) if needs_profiles else (None, None)
     xs, dx = _centers(rgba.shape[1], grid.x, px, drift)
@@ -481,7 +490,7 @@ def reduce_palette(rgba, max_colors=None, preset="auto", custom_palette=None, di
         points = rgb_to_oklab(bins)
         weights = counts.astype(float)
         if len(points) > 16000:
-            ids = np.random.default_rng(0).choice(len(points), 16000, replace=False, p=weights / weights.sum())
+            ids = np.arange(0, len(points), math.ceil(len(points) / 16000))
             points, weights = points[ids], weights[ids]
         if max_colors is not None:
             centers, _ = _kmeans(points, weights, max_colors)
@@ -532,6 +541,9 @@ def remove_background(rgba):
     color = np.median(border[close], axis=0)
     distance = np.linalg.norm(rgb_to_oklab(rgba[..., :3]) - rgb_to_oklab(color), axis=2)
     mask = (distance < .055) | (rgba[..., 3] == 0)
+    if color.min() >= 230 and np.ptp(color) <= 12:
+        rgb = rgba[..., :3].astype(int)
+        mask |= (rgb.min(2) >= 160) & (np.ptp(rgb, axis=2) <= 24)
     seed = np.zeros(mask.shape, dtype=bool)
     seed[0], seed[-1], seed[:, 0], seed[:, -1] = mask[0], mask[-1], mask[:, 0], mask[:, -1]
     outside = binary_propagation(seed, mask=mask)
@@ -581,7 +593,7 @@ def prepare_image(source, options=None):
         raise ValueError('options must be an Options instance.')
     options.validate()
     original = load_image(source)
-    rgba = np.asarray(original)
+    rgba, checker = checker_background(np.asarray(original))
     profiles = None
     if options.target_size:
         w, h = [max(1, round(v * options.target_size / max(original.size))) for v in original.size]
@@ -591,7 +603,10 @@ def prepare_image(source, options=None):
         if not fully_manual:
             profiles = edge_profiles(rgba)
         grid = detect_grid(original, options.cell, options.cell_y, options.offset_x, options.offset_y, profiles=profiles, _rgba=rgba)
+    if options.transparent:
+        rgba, _ = remove_background(rgba)
     sampled, positions = sample_cells(rgba, grid, options.drift, profiles=profiles, edge_cleanup=options.edge_cleanup)
+    positions['background_removed'] = 'checkerboard' if checker else ('flat' if options.transparent else None)
     return original, grid, sampled, positions
 
 
@@ -604,6 +619,12 @@ def process_image(source, options=None, *, artifacts=('native', 'upscaled', 'com
         raise ValueError('Unknown artifact; choose native, upscaled, comparison.')
     original, grid, sampled, positions = prepared if prepared is not None else prepare_image(source, options)
     warnings = []
+    if positions.get('background_removed') == 'checkerboard':
+        warnings.append('Painted checkerboard background converted to real transparency.')
+    if grid.x.method == grid.y.method == 'fallback':
+        warnings.append('Fallback: no consistent grid found. Detail-adaptive area sampling; missing detail cannot be recovered.')
+    if grid.x.method == 'regional':
+        warnings.append('Mixed-scale detail: finer sampling protects aligned HUD text; this is an approximation.')
     if min(grid.x.confidence, grid.y.confidence) < .25 and (grid.x.method != "native" or grid.y.method != "native"):
         warnings.append("Weak or inconsistent grid. Try a manual cell size and inspect fine details.")
     if options.transparent:

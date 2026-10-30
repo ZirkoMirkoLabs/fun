@@ -31,7 +31,7 @@ UI: mobile upload/drop, before/after slider, all eight preset palettes, custom h
 
 Inputs: PNG/JPEG/WebP/GIF first frame, at most 20 MiB, 16 MiPixels and 8192 px per side. Encoded headers are checked before decode using the site's existing input validator. Animated WebP and SVG are rejected. Images above 2048 px on the long side are downscaled with a visible notice. Native output is capped at 1 MP; exports at 32 MP and 16384 px per side. Browser colour management and JPEG decoding can differ from Pillow. Binary alpha is intentional.
 
-Smooth images use a disclosed approximate grid. Perspective, mixed grids and missing detail cannot be recovered. Optional cleanup can remove eyes or stars. For more than 16000 colour bins the JS fitter uses deterministic subsampling rather than NumPy's seeded random sampling; this is an explicit pathological-photo difference, not used by any acceptance sample.
+Smooth images use a disclosed approximate grid. Perspective, mixed grids and missing detail cannot be recovered. Optional cleanup can remove eyes or stars. For more than 16000 colour bins both ports use the same deterministic stride subsampling.
 
 ## Parity and verification
 
@@ -50,3 +50,15 @@ Samples are separately licensed from the MIT app. See the retained [source recor
 * Poster/video: the same CC0 teapot and its actual reconstructed output.
 
 No third-party resource requests are made by the app. The site's build sets `Cache-Control: public, no-cache, no-transform` for PixelSnap to prevent Cloudflare from injecting its analytics beacon on this page. Other pages retain their existing analytics policy.
+
+## V3 results and examples
+
+V3 removes a detected painted checkerboard before grid detection. Remove flat background also removes border-connected light sticker fringes before sampling. White details enclosed by an outline remain opaque.
+
+Repeated aligned bright glyphs in the top eighth of an image trigger a half-pitch sampling grid, labelled **Mixed-scale approximation**. This protects common HUD text; arbitrary mixed scales and perspective remain limitations. Manual grids take priority.
+
+Without a consistent grid, image detail chooses a 128, 160 or 192 px long side. Area means are restricted to the centre pixel's contrast group at hard edges, followed by the same Oklab palette fitting. Metadata and the UI explicitly identify this fallback. No missing detail is invented.
+
+The browser picker includes eight owner-generated examples and the 5.5x blurry sprite. All ten new originals are in `samples/v3/` in the Python distribution. Transparent sprite examples enable Remove flat background; the eight existing version presets remain stable.
+
+Validation (2026-10-30): 104 Python tests, 20 full-image comparisons and 160 preset comparisons with 100% exact RGBA Python/JS parity. Recreate fixtures with `python pixelsnap/tools/validate_v3.py G:/tmp/pixelsnap-v3` from the parent workspace; from `fun`, run `node tools/test_pixelsnap_v3.mjs G:/tmp/pixelsnap-v3`. The separate v2 exporter/sampling suite accepts that same fixture directory as its first argument.

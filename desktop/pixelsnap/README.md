@@ -201,3 +201,15 @@ python -m PyInstaller --noconfirm PixelSnap.spec
 ```
 
 Distribute the entire `dist/PixelSnap` folder. With no arguments the executable opens the local UI; `snap` runs the CLI. The console is intentional so errors and Ctrl+C remain available. Static assets and numerical native libraries are bundled; the MCP SDK is excluded (use the Python installation for MCP). Build on the target OS; this is not a signed installer or macOS app. See `samples/ACCEPTANCE.md` for this run's actual build and validation status.
+
+## V3 results and examples
+
+V3 removes a detected painted checkerboard before grid detection. Remove flat background also removes border-connected light sticker fringes before sampling. White details enclosed by an outline remain opaque.
+
+Repeated aligned bright glyphs in the top eighth of an image trigger a half-pitch sampling grid, labelled **Mixed-scale approximation**. This protects common HUD text; arbitrary mixed scales and perspective remain limitations. Manual grids take priority.
+
+Without a consistent grid, image detail chooses a 128, 160 or 192 px long side. Area means are restricted to the centre pixel's contrast group at hard edges, followed by the same Oklab palette fitting. Metadata and the UI explicitly identify this fallback. No missing detail is invented.
+
+The browser picker includes eight owner-generated examples and the 5.5x blurry sprite. All ten new originals are in `samples/v3/` in the Python distribution. Transparent sprite examples enable Remove flat background; the eight existing version presets remain stable.
+
+Validation (2026-10-30): 104 Python tests, 20 full-image comparisons and 160 preset comparisons with 100% exact RGBA Python/JS parity. Recreate fixtures with `python pixelsnap/tools/validate_v3.py G:/tmp/pixelsnap-v3` from the parent workspace; from `fun`, run `node tools/test_pixelsnap_v3.mjs G:/tmp/pixelsnap-v3`. The separate v2 exporter/sampling suite accepts that same fixture directory as its first argument.

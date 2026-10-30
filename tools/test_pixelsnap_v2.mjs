@@ -5,7 +5,7 @@ import {readFileSync,writeFileSync,readdirSync,mkdirSync} from 'node:fs';
 import {resolve,join,basename} from 'node:path';
 import {variants,listPresets,processImage,transitionPixels,cleanEdges,sampleCells} from '../projects/pixelsnap/core.mjs';
 import {exportSVG,exportPNG,exportPack,paletteHEX,paletteGPL,fitNearest,zipStore} from '../projects/pixelsnap/export-core.mjs';
-const root=resolve('../pixelsnap'),dest='G:/tmp/pixelsnap-v2';
+const root=resolve('../pixelsnap'),dest=process.argv[2]||'G:/tmp/pixelsnap-v2';
 function decode(path){const r=spawnSync('python',['-c','from PIL import Image; import sys,struct; im=Image.open(sys.argv[1]).convert("RGBA"); sys.stdout.buffer.write(struct.pack("<II",*im.size)+im.tobytes())',path],{maxBuffer:128e6});assert.equal(r.status,0,r.stderr.toString());return {width:r.stdout.readUInt32LE(0),height:r.stdout.readUInt32LE(4),data:new Uint8ClampedArray(r.stdout.subarray(8))};}
 assert.equal(readFileSync('projects/pixelsnap/presets.json','utf8'),readFileSync('desktop/pixelsnap/pixelsnap/presets.json','utf8'));
 const rows=[];
